@@ -12,7 +12,6 @@ export default class Game implements IScene {
     }
 
     async initialize(): Promise<boolean> {
-
         await Promise.all([
             this.entities.push(await new Player().initialize(200, 400)),
         ]);

@@ -7,9 +7,6 @@ export default class Player implements IEntity {
     physicsBody: Body;
     image: HTMLImageElement;
 
-    imageWidth: number = 50;
-    imageHeight: number = 50;
-
     async initialize(x: number, y: number) {
         this.image = await new ImageLoader().loadImage('/assets/testimage.jpg');
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
