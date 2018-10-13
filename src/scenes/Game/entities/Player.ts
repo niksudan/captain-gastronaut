@@ -1,4 +1,5 @@
 import { Bodies, Body, Composite, World, Constraint } from 'matter-js';
+import * as randomItem from 'random-item';
 
 import PlayerHead from './PlayerLimbs/PlayerHead';
 import PlayerArmLeft from './PlayerLimbs/PlayerArmLeft';
@@ -14,6 +15,11 @@ interface IPosition {
   y: number;
 }
 
+interface ISoundData {
+  sound: HTMLAudioElement;
+  startTime: number;
+}
+
 export default class Player extends IEntity {
   physicsBody: Body;
   composite: Composite;
@@ -21,11 +27,28 @@ export default class Player extends IEntity {
   image: HTMLImageElement;
   buildUp: number = 0.0;
   head: PlayerHead;
+  chargeSounds: ISoundData[];
+  chargeSound?: ISoundData;
 
   async initialize(x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerBody.png',
     );
+
+    this.chargeSounds = [
+      {
+        sound: await this.soundLoader.loadSound('/assets/sounds/charge1.ogg'),
+        startTime: 0.1,
+      },
+      {
+        sound: await this.soundLoader.loadSound('/assets/sounds/charge2.ogg'),
+        startTime: 0.1,
+      },
+      {
+        sound: await this.soundLoader.loadSound('/assets/sounds/charge3.ogg'),
+        startTime: 0,
+      },
+    ];
 
     this.physicsBody = Bodies.rectangle(
       x,
@@ -118,6 +141,11 @@ export default class Player extends IEntity {
     }
 
     if (gameState.keyPresses['ArrowUp']) {
+      if (this.buildUp === 0) {
+        this.chargeSound = randomItem(this.chargeSounds);
+        this.chargeSound.sound.currentTime = this.chargeSound.startTime;
+        this.chargeSound.sound.play();
+      }
       this.buildUp += BUILD_UP_SPEED;
       Body.setAngularVelocity(
         this.physicsBody,
@@ -125,6 +153,9 @@ export default class Player extends IEntity {
       );
       this.head.setFace('CHARGING');
     } else {
+      if (this.chargeSound) {
+        this.chargeSound.sound.pause();
+      }
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
 
@@ -138,7 +169,7 @@ export default class Player extends IEntity {
 
         this.buildUp = 0;
       }
-      if (this.physicsBody.speed > 1) {
+      if (this.physicsBody.speed > 2) {
         this.head.setFace('POOP');
       } else {
         this.head.setFace('PASSIVE');
