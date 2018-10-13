@@ -15,11 +15,6 @@ interface IPosition {
   y: number;
 }
 
-interface ISoundData {
-  sound: HTMLAudioElement;
-  startTime: number;
-}
-
 export default class Player extends IEntity {
   physicsBody: Body;
   composite: Composite;
@@ -27,8 +22,11 @@ export default class Player extends IEntity {
   image: HTMLImageElement;
   buildUp: number = 0.0;
   head: PlayerHead;
-  chargeSounds: ISoundData[];
-  chargeSound?: ISoundData;
+  chargeSound?: HTMLAudioElement;
+  chargeSounds: HTMLAudioElement[];
+  canFart: boolean = false;
+  fartSounds: HTMLAudioElement[];
+  bigFartSounds: HTMLAudioElement[];
 
   async initialize(x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
@@ -36,18 +34,18 @@ export default class Player extends IEntity {
     );
 
     this.chargeSounds = [
-      {
-        sound: await this.soundLoader.loadSound('/assets/sounds/charge1.ogg'),
-        startTime: 0.1,
-      },
-      {
-        sound: await this.soundLoader.loadSound('/assets/sounds/charge2.ogg'),
-        startTime: 0.1,
-      },
-      {
-        sound: await this.soundLoader.loadSound('/assets/sounds/charge3.ogg'),
-        startTime: 0,
-      },
+      await this.soundLoader.loadSound('/assets/sounds/charge1.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/charge2.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/charge3.ogg'),
+    ];
+    this.fartSounds = [
+      await this.soundLoader.loadSound('/assets/sounds/fart1.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/fart2.ogg'),
+    ];
+    this.bigFartSounds = [
+      await this.soundLoader.loadSound('/assets/sounds/bigfart1.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/bigfart2.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/bigfart3.ogg'),
     ];
 
     this.physicsBody = Bodies.rectangle(
@@ -130,7 +128,7 @@ export default class Player extends IEntity {
   update(gameState: IGameState) {
     const ROTATION_SPEED = 0.02;
     const SPEED = 2;
-    const BUILD_UP_SPEED = 0.01;
+    const BUILD_UP_SPEED = 0.005;
 
     if (gameState.keyPresses['ArrowLeft']) {
       Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -143,22 +141,22 @@ export default class Player extends IEntity {
     if (gameState.keyPresses['ArrowUp']) {
       if (this.buildUp === 0) {
         this.chargeSound = randomItem(this.chargeSounds);
-        this.chargeSound.sound.currentTime = this.chargeSound.startTime;
-        this.chargeSound.sound.play();
+        this.chargeSound.currentTime = 0;
+        this.chargeSound.play();
       }
+      this.canFart = true;
       this.buildUp += BUILD_UP_SPEED;
       Body.setAngularVelocity(
         this.physicsBody,
-        Math.sin(this.buildUp * 50) / 100,
+        Math.sin(this.buildUp * 100) / 100,
       );
       this.head.setFace('CHARGING');
     } else {
       if (this.chargeSound) {
-        this.chargeSound.sound.pause();
+        this.chargeSound.pause();
       }
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
-
         if (this.buildUp > 0.5) {
           const force = Math.min(1, this.buildUp);
           Body.applyForce(this.physicsBody, this.physicsBody.position, {
@@ -166,7 +164,14 @@ export default class Player extends IEntity {
             y: Math.sin(angle) * (SPEED * force),
           });
         }
-
+        if (this.canFart) {
+          if (this.buildUp > 0.5) {
+            randomItem(this.bigFartSounds).play();
+          } else {
+            randomItem(this.fartSounds).play();
+          }
+          this.canFart = false;
+        }
         this.buildUp = 0;
       }
       if (this.physicsBody.speed > 2) {
