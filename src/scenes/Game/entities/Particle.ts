@@ -1,5 +1,6 @@
 import IEntity from '../../../definitions/IEntity';
 import { World, Body, Bodies } from 'matter-js';
+import { IGameState } from '../../../definitions/IGameState';
 
 export default class Particle extends IEntity {
   physicsBody: Body;
@@ -7,7 +8,7 @@ export default class Particle extends IEntity {
   image: HTMLImageElement;
   buildUp: number = 0.0;
 
-  async initialize(x: number, y: number, images: string[]) {
+  async initialize(gameState: IGameState, x: number, y: number, images: string[]) {
     const imageSelected = images[~~(Math.random() * (images.length - 1))];
     this.image = await this.imageLoader.loadImage(
       `/assets/images/${imageSelected}`,

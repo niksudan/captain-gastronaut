@@ -6,7 +6,7 @@ export default class PlayerArmRight extends IEntity {
   physicsBody: Body;
   image: HTMLImageElement;
 
-  async initialize(x: number, y: number) {
+  async initialize(gameState: IGameState, x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerArmRight.png',
     );

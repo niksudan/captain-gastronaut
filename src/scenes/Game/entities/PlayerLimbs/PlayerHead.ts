@@ -1,5 +1,6 @@
 import { Bodies, Body } from 'matter-js';
 import IEntity from '../../../../definitions/IEntity';
+import { IGameState } from '../../../../definitions/IGameState';
 
 interface faces {
   PASSIVE: HTMLImageElement;
@@ -12,7 +13,7 @@ export default class PlayerHead extends IEntity {
   image: HTMLImageElement;
   faces: faces;
 
-  async initialize(x: number, y: number) {
+  async initialize(gameState: IGameState, x: number, y: number) {
     this.faces = {
       PASSIVE: await this.imageLoader.loadImage(
         '/assets/images/playerHead.png',

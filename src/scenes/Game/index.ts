@@ -18,7 +18,7 @@ export default class Game implements IScene {
     this.entities = [];
   }
 
-  private async createObstacle(ignoreScreen = false) {
+  private async createObstacle(gameState: IGameState, ignoreScreen = false) {
     const numberWithinRange = (min: number, max: number) => {
       return Math.random() * (max - 1) + min;
     };
@@ -60,20 +60,20 @@ export default class Game implements IScene {
       );
     }
 
-    const obstacle = await new Obstacle().initialize(x, y);
+    const obstacle = await new Obstacle().initialize(gameState, x, y);
     this.entities.push(obstacle);
     this.obstacles.push(obstacle);
   }
 
-  private async createObstacles(ignoreScreen = false) {
+  private async createObstacles(gameState: IGameState, ignoreScreen = false) {
     for (let i: number = this.obstacles.length; i < MAX_OBSTACLE_COUNT; i++) {
-      await this.createObstacle(ignoreScreen);
+      await this.createObstacle(gameState, ignoreScreen);
     }
   }
 
   async initialize(gameState: IGameState): Promise<boolean> {
-    await this.createObstacles(false);
-    const player = await new Player().initialize(300, 200);
+    await this.createObstacles(gameState, false);
+    const player = await new Player().initialize(gameState, 300, 200);
 
     gameState.focusedEntity = player;
 
@@ -83,7 +83,7 @@ export default class Game implements IScene {
   }
 
   update(gameState: IGameState) {
-    this.createObstacles(true);
+    this.createObstacles(gameState, true);
     for (let entity of this.entities) {
       entity.update(gameState);
     }
