@@ -48,11 +48,16 @@ export default class Player implements IEntity {
     }
 
     render(context: CanvasRenderingContext2D) {
-        context.drawImage(this.image, this.physicsBody.position.x, this.physicsBody.position.y);
+        context.save();
+        context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
+
+        context.drawImage(this.image, 0, 0);
 
         for (let limb of this.limbs) {
             limb.render(context);
         }
+
+        context.restore();
     }
 
 
