@@ -34,7 +34,7 @@ export default class PlayerHead extends IEntity {
       x,
       y,
       this.image.width / 2,
-      this.image.height / 2,
+      this.image.height,
       {
         collisionFilter: {
           category: 2,

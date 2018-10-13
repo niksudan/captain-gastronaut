@@ -25,9 +25,9 @@ export default class Player extends IEntity {
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/images/playerBody.png');
 
-        this.physicsBody = Bodies.rectangle(x, y, this.image.width / 2, this.image.height / 2, {
+        this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height, {
           collisionFilter: {
-            category: 1,
+            category: 2,
             mask: 0,
           } as any,
         });
