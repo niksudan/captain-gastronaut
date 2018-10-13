@@ -106,8 +106,8 @@ export default class Player extends IEntity {
 
   update(gameState: IGameState) {
     const ROTATION_SPEED = 0.02;
-    const SPEED = 0.1;
-    const BUILD_UP_SPEED = 0.025;
+    const SPEED = 2;
+    const BUILD_UP_SPEED = 0.01;
 
     if (gameState.keyPresses['ArrowLeft']) {
       Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -118,19 +118,21 @@ export default class Player extends IEntity {
     }
 
     if (gameState.keyPresses['ArrowUp']) {
-      if (this.buildUp < 1.0) {
-        this.buildUp += BUILD_UP_SPEED;
-      }
-
+      this.buildUp += BUILD_UP_SPEED;
+      Body.setAngularVelocity(
+        this.physicsBody,
+        Math.sin(this.buildUp * 50) / 100,
+      );
       this.head.setFace('CHARGING');
     } else {
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
 
         if (this.buildUp > 0.5) {
+          const force = Math.min(1, this.buildUp);
           Body.applyForce(this.physicsBody, this.physicsBody.position, {
-            x: Math.cos(angle) * (SPEED * this.buildUp),
-            y: Math.sin(angle) * (SPEED * this.buildUp),
+            x: Math.cos(angle) * (SPEED * force),
+            y: Math.sin(angle) * (SPEED * force),
           });
         }
 
