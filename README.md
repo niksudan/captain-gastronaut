@@ -20,6 +20,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 
 ### Optional
 
+* Turn acceleration
 * Screen shake on flings
 * Invader spawning
 * Laser gun controls
@@ -30,15 +31,15 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Player head~~
 * ~~Player arm~~
 * ~~Player leg~~
-* Background
 * ~~Control panels~~
 * ~~Small obstacle~~
 * ~~Medium obstacle~~
-* Large obstacle
-* Planet under attack
-* Planet exploded
+* ~~Large obstacle~~
 * ~~Fart particles~~
 * ~~Shit~~
+* Background
+* Planet under attack
+* Planet exploded
 * Player head expressions (charging fart, shitstorm)
 
 ### Optional
