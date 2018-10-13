@@ -1,4 +1,4 @@
-import { Bodies, Body, World } from 'matter-js';
+import { Bodies, Body, Composite, World, Constraint } from 'matter-js';
 
 import PlayerHead from './PlayerLimbs/PlayerHead';
 import PlayerArmLeft from './PlayerLimbs/PlayerArmLeft';
@@ -9,28 +9,59 @@ import PlayerLegRight from './PlayerLimbs/PlayerLegRight';
 import IEntity from '../../../definitions/IEntity';
 import { IGameState } from "../../../definitions/IGameState";
 
+interface IPosition {
+    x: number;
+    y: number;
+}
+
 export default class Player extends IEntity {
     physicsBody: Body;
+    composite: Composite;
     limbs: IEntity[];
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/playerBody.png');
-     
-        this.limbs = [
-            await new PlayerHead().initialize(x, y - 64),
-            await new PlayerArmLeft().initialize(x - 30, y),
-            await new PlayerArmRight().initialize(x + 30, y),
-            await new PlayerLegLeft().initialize(x - 10, y + 80),
-            await new PlayerLegRight().initialize(x + 10, y + 80),
-        ];
 
-        this.physicsBody = Body.create({
-            parts: [
-                Bodies.rectangle(x, y, this.image.width, this.image.height),
-                ...this.limbs.map((limb) => limb.physicsBody),
+        this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
+
+        const createLimb = async (LimbClass, offSet: IPosition) => {
+            const limb = await new LimbClass().initialize(x + offSet.x, y + offSet.y);
+
+            const constraint = Constraint.create({
+                bodyA: this.physicsBody,
+                bodyB: limb.physicsBody,
+                pointB: {
+                    x: 0,
+                    y: 0,
+                },
+            });
+
+            return {
+                limb,
+                constraint,
+            };
+        }
+
+        const head = await createLimb(PlayerHead, { x: 0, y: -46 });
+        const leftLimb = await createLimb(PlayerArmLeft, { x: -44, y: -34 });
+        const rightLimb = await createLimb(PlayerArmRight, { x: +44, y: -34 });
+
+        this.composite = Composite.create({
+            bodies: [
+                this.physicsBody,
+                leftLimb.limb.physicsBody,
+                rightLimb.limb.physicsBody,
+                head.limb.physicsBody,
+            ],
+            constraints: [
+                leftLimb.constraint,
+                rightLimb.constraint,
+                head.constraint,
             ],
         });
+
+        this.limbs = [leftLimb.limb, rightLimb.limb, head.limb];
 
         Body.applyForce(this.physicsBody, this.physicsBody.position, {
             x: 1,
@@ -47,9 +78,7 @@ export default class Player extends IEntity {
     }
 
     addToWorld(world: World) {
-        World.add(world, [
-            this.physicsBody
-        ]);
+        World.add(world, this.composite);
     }
 
     render(context: CanvasRenderingContext2D) {

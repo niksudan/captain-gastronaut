@@ -8,6 +8,10 @@ export default class PlayerArmLeft extends IEntity {
 
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/playerArmLeft.png');
+        this.offSet = {
+            x: -this.image.width / 2,
+            y: 0,
+        };
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
         
@@ -15,6 +19,6 @@ export default class PlayerArmLeft extends IEntity {
     }
 
     update(gameState: IGameState) {
-        
+        // this.rotation += 0.02;
     }
 }
