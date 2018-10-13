@@ -1,4 +1,4 @@
-import { Bodies, Body } from 'matter-js';
+import { Bodies, Body, World } from 'matter-js';
 
 import PlayerHead from './PlayerLimbs/PlayerHead';
 import PlayerArmLeft from './PlayerLimbs/PlayerArmLeft';
@@ -25,8 +25,8 @@ export default class Player extends IEntity {
         this.physicsBody = Body.create({
             parts: [
                 Bodies.rectangle(x, y, this.image.width, this.image.height),
-                ...this.limbs.map((limb) => limb.physicsBody)
-            ]
+                ...this.limbs.map((limb) => limb.physicsBody),
+            ],
         });
 
         Body.applyForce(this.physicsBody, this.physicsBody.position, {
@@ -42,9 +42,11 @@ export default class Player extends IEntity {
             limb.update(gameState);
         }
     }
-    
-    getPhysicsBodies(): Body[] {
-        return [this.physicsBody, ...this.limbs.map((limb) => limb.physicsBody)];
+
+    addToWorld(world: World) {
+        World.add(world, [
+            this.physicsBody
+        ]);
     }
 
     render(context: CanvasRenderingContext2D) {
@@ -53,11 +55,11 @@ export default class Player extends IEntity {
 
         context.drawImage(this.image, 0, 0);
 
+        context.restore();
+
         for (let limb of this.limbs) {
             limb.render(context);
         }
-
-        context.restore();
     }
 
 

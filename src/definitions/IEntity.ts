@@ -1,4 +1,4 @@
-import { Body } from 'matter-js';
+import { Body, World } from 'matter-js';
 import { IGameState } from './IGameState';
 
 export default abstract class IEntity {
@@ -6,10 +6,9 @@ export default abstract class IEntity {
     image: HTMLImageElement;
 
     abstract initialize(x: number, y: number, args?: any): Promise<IEntity>;
-    abstract update(gameState: IGameState);
 
-    getPhysicsBodies(): Body[] {
-        return [this.physicsBody];
+    addToWorld(world: World) {
+        World.add(world, [this.physicsBody]);
     }
 
     render(context: CanvasRenderingContext2D) {
@@ -18,4 +17,6 @@ export default abstract class IEntity {
         context.drawImage(this.image, 0, 0);
         context.restore();
     }
+
+    update(gameState: IGameState) {}
 }
