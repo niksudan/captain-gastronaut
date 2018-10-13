@@ -1,8 +1,8 @@
 import IEntity from '../../../definitions/IEntity';
-import { World, Body, Bodies } from 'matter-js';
+import { World, Body, Bodies, Sleeping } from 'matter-js';
 import { IGameState } from '../../../definitions/IGameState';
 
-const OBSTACLE_IMAGES = ['obstacleBig.png', 'obstacleMedium.png'];
+const OBSTACLE_IMAGES = ['obstacleBig.png', 'obstacleMedium.png', 'obstacleSmall.png'];
 
 export default class Obstacle extends IEntity {
   physicsBody: Body;
@@ -12,7 +12,8 @@ export default class Obstacle extends IEntity {
 
   async initialize(gameState: IGameState, x: number, y: number) {
     const imageSelected =
-      OBSTACLE_IMAGES[~~(Math.random() * (OBSTACLE_IMAGES.length - 1))];
+      OBSTACLE_IMAGES[~~(Math.random() * (OBSTACLE_IMAGES.length))];
+
     this.image = await this.imageLoader.loadImage(
       `/assets/images/${imageSelected}`,
     );
@@ -30,6 +31,8 @@ export default class Obstacle extends IEntity {
         } as any,
       },
     );
+
+    Body.rotate(this.physicsBody, (Math.random() * 360) * (180 / Math.PI));
 
     gameState.subscribeToEvent('obstacle', () => {
       // TODO: IMPLEMENT ME NIK
