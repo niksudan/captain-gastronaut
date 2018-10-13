@@ -1,20 +1,20 @@
 import { Bodies, Body } from 'matter-js';
 import IEntity from '../../../../definitions/IEntity';
+import { IGameState } from '../../../../definitions/IGameState';
 
-export default class PlayerHead extends IEntity {
+export default class PlayerLegRight extends IEntity {
     physicsBody: Body;
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
-        this.image = await this.imageLoader.loadImage('/assets/playerHead.png');
-        this.offSet = {
-            x: 0,
-            y: -this.image.height / 2,
-        };
+        this.image = await this.imageLoader.loadImage('/assets/playerLegRight.png');
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
         
         return this;
     }
 
+    update(gameState: IGameState) {
+        
+    }
 }

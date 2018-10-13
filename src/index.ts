@@ -54,7 +54,7 @@ const main = async () => {
         gameState.currentScene.update(gameState);
         gameState.currentScene.render(context);
     
-        Engine.update(engine);
+        // Engine.update(engine);
         requestAnimationFrame(render);
     };
     

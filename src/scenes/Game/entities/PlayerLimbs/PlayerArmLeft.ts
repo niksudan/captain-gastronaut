@@ -1,14 +1,17 @@
 import { Bodies, Body } from 'matter-js';
-import ImageLoader from '../../../../Image/ImageLoader';
 import IEntity from '../../../../definitions/IEntity';
 import { IGameState } from '../../../../definitions/IGameState';
 
-export default class Player extends IEntity {
+export default class PlayerArmLeft extends IEntity {
     physicsBody: Body;
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
-        this.image = await new ImageLoader().loadImage('/assets/playerArmLeft.png');
+        this.image = await this.imageLoader.loadImage('/assets/playerArmLeft.png');
+        this.offSet = {
+            x: -this.image.width / 2,
+            y: 0,
+        };
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
         
@@ -16,6 +19,6 @@ export default class Player extends IEntity {
     }
 
     update(gameState: IGameState) {
-        
+        // this.rotation += 0.02;
     }
 }
