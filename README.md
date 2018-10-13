@@ -5,14 +5,17 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 ## Engine
 
 * ~~Set up~~
-* Ragdoll
-* Player controls (arm movement)
+* ~~Ragdoll~~
+* ~~Turning the player~~
+* Applying fart force
+* Viewport panning
 * Obstacle spawning
 * Control panel interaction
-* Timer
 * Choosing control panels to activate
+* Timer
 * Difficulty progression (spawn harder obstacles)
 * Random flinging
+* Shitstorm
 * Menu
 
 ### Optional
@@ -28,17 +31,18 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Player arm~~
 * ~~Player leg~~
 * Background
-* Control panel
-* Control panel active
-* Small obstacle
-* Medium obstacle
+* ~~Control panels~~
+* ~~Small obstacle~~
+* ~~Medium obstacle~~
 * Large obstacle
 * Planet under attack
 * Planet exploded
+* ~~Fart particles~~
+* ~~Shit~~
+* Player head expressions (charging fart, shitstorm)
 
 ### Optional
 
-* Player head expressions
 * Invader body
 * Invader header
 * Invader arm
