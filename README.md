@@ -26,7 +26,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Player body~~
 * ~~Player head~~
 * ~~Player arm~~
-* Player leg
+* ~~Player leg~~
 * Background
 * Control panel
 * Control panel active
