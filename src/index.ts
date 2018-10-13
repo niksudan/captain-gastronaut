@@ -18,6 +18,7 @@ World.add(engine.world, []);
 
 const gameState = {
     currentScene: null,
+    focusedEntity: null,
     keyPresses: {},
 } as IGameState;
 
@@ -42,7 +43,7 @@ const main = async () => {
 
     SetScene(new Game());
 
-    await gameState.currentScene.initialize();
+    await gameState.currentScene.initialize(gameState);
 
 
     for (let entity of gameState.currentScene.entities) {
@@ -51,13 +52,26 @@ const main = async () => {
 
     const render = () => {
 
+        context.save();
+
         context.clearRect(0, 0, GameSettings.width, GameSettings.height);
+
+        if (gameState.focusedEntity !== null) {
+          const position = gameState.focusedEntity.physicsBody.position;
+
+          context.translate(
+            -position.x + GameSettings.width / 2,
+            -position.y + GameSettings.height / 2,
+          );
+        }
 
         gameState.currentScene.update(gameState);
         gameState.currentScene.render(context);
     
         Engine.update(engine);
         requestAnimationFrame(render);
+
+        context.restore();
     };
     
     render();

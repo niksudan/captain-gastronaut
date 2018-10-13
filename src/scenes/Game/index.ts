@@ -11,12 +11,16 @@ export default class Game implements IScene {
         this.entities = [];
     }
 
-    async initialize(): Promise<boolean> {
-        await Promise.all([
-            this.entities.push(await new Player().initialize(300, 200)),
-        ]);
+    async initialize(gameState: IGameState): Promise<boolean> {
+      const player = await new Player().initialize(300, 200);
 
-        return true;
+      gameState.focusedEntity = player;
+
+      await Promise.all([
+          this.entities.push(player),
+      ]);
+
+      return true;
     }
 
     update(gameState: IGameState) {
