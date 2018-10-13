@@ -26,11 +26,15 @@ export default class Player extends IEntity {
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
 
         const createLimb = async (LimbClass, offSet: IPosition) => {
-            const limb = await new LimbClass().initialize(x + offSet.x, y + offSet.y);
+            const entity = await new LimbClass().initialize(x + offSet.x, y + offSet.y);
 
             const constraint = Constraint.create({
                 bodyA: this.physicsBody,
-                bodyB: limb.physicsBody,
+                bodyB: entity.physicsBody,
+                pointA: {
+                    x: offSet.x,
+                    y: offSet.y,
+                },
                 pointB: {
                     x: 0,
                     y: 0,
@@ -38,30 +42,32 @@ export default class Player extends IEntity {
             });
 
             return {
-                limb,
+                entity,
                 constraint,
             };
         }
 
         const head = await createLimb(PlayerHead, { x: 0, y: -46 });
-        const leftLimb = await createLimb(PlayerArmLeft, { x: -44, y: -34 });
-        const rightLimb = await createLimb(PlayerArmRight, { x: +44, y: -34 });
+        const leftArm = await createLimb(PlayerArmLeft,
+                { x: -44, y: -34 },
+            );
+        const rightArm = await createLimb(PlayerArmRight, { x: +44, y: -34 });
 
         this.composite = Composite.create({
             bodies: [
                 this.physicsBody,
-                leftLimb.limb.physicsBody,
-                rightLimb.limb.physicsBody,
-                head.limb.physicsBody,
+                leftArm.entity.physicsBody,
+                rightArm.entity.physicsBody,
+                head.entity.physicsBody,
             ],
             constraints: [
-                leftLimb.constraint,
-                rightLimb.constraint,
+                leftArm.constraint,
+                rightArm.constraint,
                 head.constraint,
             ],
         });
 
-        this.limbs = [leftLimb.limb, rightLimb.limb, head.limb];
+        this.limbs = [leftArm.entity, rightArm.entity, head.entity];
 
         Body.applyForce(this.physicsBody, this.physicsBody.position, {
             x: 1,
@@ -84,6 +90,7 @@ export default class Player extends IEntity {
     render(context: CanvasRenderingContext2D) {
         context.save();
         context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
+        context.rotate(this.physicsBody.angle);
 
         context.drawImage(this.image, -this.image.width / 2, -this.image.height / 2);
 
