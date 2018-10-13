@@ -191,7 +191,9 @@ export default class Player extends IEntity {
 
           const { x, y } = this.physicsBody.position;
 
-          this.addParticle(gameState, x, y, fartParticles);
+          for (let i: number = 0; i < 5; i ++) {
+            this.addParticle(gameState, x, y, fartParticles);
+          }
         }
         if (this.canFart) {
           if (this.buildUp > 0.5) {
