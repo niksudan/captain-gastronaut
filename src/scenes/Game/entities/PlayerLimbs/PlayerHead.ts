@@ -17,12 +17,12 @@ export default class PlayerHead extends IEntity {
     this.physicsBody = Bodies.rectangle(
       x,
       y,
-      this.image.width,
-      this.image.height,
+      this.image.width / 2,
+      this.image.height / 2,
       {
         collisionFilter: {
           category: 2,
-          mask: 0,
+          mask: 2,
         } as any,
       }
     );

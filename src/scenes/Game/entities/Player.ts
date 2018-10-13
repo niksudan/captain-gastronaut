@@ -23,9 +23,9 @@ export default class Player extends IEntity {
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/images/playerBody.png');
 
-        this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height, {
+        this.physicsBody = Bodies.rectangle(x, y, this.image.width / 2, this.image.height / 2, {
           collisionFilter: {
-            category: 2,
+            category: 1,
             mask: 0,
           } as any,
         });
@@ -83,9 +83,9 @@ export default class Player extends IEntity {
         });
 
         this.limbs = [
+          head.entity,
           leftArm.entity,
           rightArm.entity,
-          head.entity,
           leftLeg.entity,
           rightLeg.entity,
         ];
@@ -97,21 +97,33 @@ export default class Player extends IEntity {
         World.add(world, this.composite);
     }
 
+    update(gameState: IGameState) {
+      const ROTATION_SPEED = 0.02;
+
+      if (gameState.keyPresses['ArrowLeft']) {
+        Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
+      }
+
+      if (gameState.keyPresses['ArrowRight']) {
+        Body.setAngularVelocity(this.physicsBody, ROTATION_SPEED);
+      }
+    }
+
     render(context: CanvasRenderingContext2D) {
         context.save();
         context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
         context.rotate(this.physicsBody.angle);
 
-    context.drawImage(
-      this.image,
-      -this.image.width / 2,
-      -this.image.height / 2,
-    );
+        context.drawImage(
+          this.image,
+          -this.image.width / 2,
+          -this.image.height / 2,
+        );
 
-    context.restore();
+        context.restore();
 
-    for (let limb of this.limbs) {
-      limb.render(context);
+        for (let limb of this.limbs) {
+          limb.render(context);
+        }
     }
-  }
 }
