@@ -14,7 +14,7 @@ export default abstract class IEntity {
   imageLoader = new ImageLoader();
   soundLoader = new SoundLoader();
 
-  abstract initialize(x: number, y: number, args?: any): Promise<IEntity>;
+  abstract initialize(gameState: IGameState, x: number, y: number, args?: any): Promise<IEntity>;
 
   addToWorld(world: World) {
     World.add(world, [this.physicsBody]);

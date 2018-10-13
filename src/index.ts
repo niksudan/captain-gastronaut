@@ -1,4 +1,4 @@
-import { Engine, World } from 'matter-js';
+import { Engine, Events, World } from 'matter-js';
 import { flatMap } from 'lodash';
 import GameSettings from './data/GameSettings';
 import { IScene } from './definitions/IScene';
@@ -20,6 +20,14 @@ const gameState = {
     currentScene: null,
     focusedEntity: null,
     keyPresses: {},
+    collisionSubscriptions: {},
+    subscribeToEvent(name: string, subscription: () => void) {
+      if (!gameState.collisionSubscriptions[name]) {
+        gameState.collisionSubscriptions[name] = [];
+      }
+
+      gameState.collisionSubscriptions[name].push(subscription);
+    }
 } as IGameState;
 
 document.addEventListener('keyup', (event) => {
@@ -34,7 +42,20 @@ const SetScene = (scene: IScene) => {
     engine = Engine.create();
     engine.world.gravity.scale = 0;
     engine.world.gravity.y = 0;
+    gameState.collisionSubscriptions = {};
     gameState.currentScene = scene;
+
+    Events.on(engine, 'collisionStart', function(event) {
+      for (let pair of event.pairs) {
+
+        const subscriptions = [
+          ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
+          ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
+        ];
+
+        subscriptions.map((subscription) => subscription());
+      }
+    });
 }
 
 const context = canvas.getContext('2d');

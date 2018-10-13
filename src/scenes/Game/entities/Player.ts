@@ -28,7 +28,7 @@ export default class Player extends IEntity {
   fartSounds: HTMLAudioElement[];
   bigFartSounds: HTMLAudioElement[];
 
-  async initialize(x: number, y: number) {
+  async initialize(gameState: IGameState, x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerBody.png',
     );
@@ -65,6 +65,7 @@ export default class Player extends IEntity {
 
     const createLimb = async (LimbClass, offSet: IPosition) => {
       const entity = await new LimbClass().initialize(
+        gameState,
         x + offSet.x,
         y + offSet.y,
       );
