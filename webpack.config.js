@@ -30,6 +30,8 @@ module.exports = {
   },
   plugins: [
       new CheckerPlugin(),
-      new HtmlWebpackPlugin()
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, 'index.html'),
+      })
   ]
 };

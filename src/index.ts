@@ -71,9 +71,26 @@ const main = async () => {
         entity.addToWorld(engine.world);
     }
 
+    const handleCanvasResize = () => {
+      const heightRatio = GameSettings.height / GameSettings.width;
+
+      let canvasWidth = window.innerWidth;
+      let canvasHeight = window.innerWidth * heightRatio;
+
+      if (canvasHeight > window.innerHeight) {
+        canvasWidth = window.innerHeight / heightRatio;
+        canvasHeight = window.innerHeight;
+      }
+
+      canvas.style.width = `${canvasWidth}px`;
+      canvas.style.height = `${canvasHeight}px`;
+    };
+
     const render = () => {
 
         context.save();
+
+        handleCanvasResize();
 
         context.clearRect(0, 0, GameSettings.width, GameSettings.height);
 
