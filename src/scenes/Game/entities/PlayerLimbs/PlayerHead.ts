@@ -8,7 +8,7 @@ export default class Player implements IEntity {
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
-        this.image = await new ImageLoader().loadImage('/assets/playerBody.png');
+        this.image = await new ImageLoader().loadImage('/assets/playerHead.png');
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
         
@@ -26,6 +26,4 @@ export default class Player implements IEntity {
     render(context: CanvasRenderingContext2D) {
         context.drawImage(this.image, this.physicsBody.position.x, this.physicsBody.position.y);
     }
-
-
 }
