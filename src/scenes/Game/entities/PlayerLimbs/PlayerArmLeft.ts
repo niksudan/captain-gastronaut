@@ -18,14 +18,20 @@ export default class PlayerArmLeft extends IEntity {
     this.physicsBody = Bodies.rectangle(
       x,
       y,
-      this.image.width,
+      this.image.width / 2,
       this.image.height,
+      {
+        collisionFilter: {
+          category: 2,
+          mask: 2,
+        } as any,
+      }
     );
+    this.physicsBody.force.y = 0;
 
     return this;
   }
 
   update(gameState: IGameState) {
-    // this.rotation += 0.02;
   }
 }
