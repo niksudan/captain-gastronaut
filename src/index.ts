@@ -3,13 +3,15 @@ import GameSettings from './data/GameSettings';
 import { IScene } from './definitions/IScene';
 import { IGameState } from './definitions/IGameState';
 
+import Game from './scenes/Game';
+
 const canvas = document.createElement('canvas');
 canvas.width = GameSettings.width;
 canvas.height = GameSettings.height;
 
 document.body.appendChild(canvas);
 
-const engine = Engine.create();
+let engine = Engine.create();
 
 World.add(engine.world, []);
 
@@ -27,18 +29,32 @@ document.addEventListener('keydown', (event) => {
 });
 
 const SetScene = (scene: IScene) => {
+    engine = Engine.create();
     gameState.currentScene = scene;
 }
 
 const context = canvas.getContext('2d');
 
-const render = () => {
+const main = async () => {
 
-    gameState.currentScene.update(gameState);
-    gameState.currentScene.render(context);
+    SetScene(new Game());
 
-    Engine.update(engine);
-    requestAnimationFrame(render);
-};
+    await gameState.currentScene.initialize();
+    
+    World.add(engine.world, gameState.currentScene.entities.map((entity) => entity.getPhysicsBody()));
 
-render();
+    const render = () => {
+
+        context.clearRect(0, 0, GameSettings.width, GameSettings.height);
+
+        gameState.currentScene.update(gameState);
+        gameState.currentScene.render(context);
+    
+        Engine.update(engine);
+        requestAnimationFrame(render);
+    };
+    
+    render();
+}
+
+main();
