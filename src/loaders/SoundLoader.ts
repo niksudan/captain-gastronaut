@@ -1,10 +1,11 @@
 export default class SoundLoader {
   loadSound(path: string): Promise<HTMLAudioElement> {
-    const sound = document.createElement('audio');
-    sound.src = path;
+    const sound = new Audio(path);
+    sound.load();
 
     return new Promise<HTMLAudioElement>((resolve) => {
-      sound.onload = () => {
+      sound.oncanplaythrough = () => {
+        console.log(sound);
         resolve(sound);
       };
     });
