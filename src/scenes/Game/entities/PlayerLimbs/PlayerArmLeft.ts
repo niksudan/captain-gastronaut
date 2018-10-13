@@ -20,12 +20,16 @@ export default class PlayerArmLeft extends IEntity {
       y,
       this.image.width,
       this.image.height,
+      {
+        collisionFilter: {
+          category: 2,
+        }
+      } as any
     );
 
     return this;
   }
 
   update(gameState: IGameState) {
-    // this.rotation += 0.02;
   }
 }

@@ -10,12 +10,21 @@ export default class PlayerLegRight extends IEntity {
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerLegRight.png',
     );
+    this.offSet = {
+      x: 0,
+      y: this.image.height / 2,
+    };
 
     this.physicsBody = Bodies.rectangle(
       x,
       y,
       this.image.width,
       this.image.height,
+      {
+        collisionFilter: {
+          category: 2,
+        }
+      } as any
     );
 
     return this;

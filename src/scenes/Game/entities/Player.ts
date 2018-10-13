@@ -23,7 +23,11 @@ export default class Player extends IEntity {
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/images/playerBody.png');
 
-        this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
+        this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height, {
+          collisionFilter: {
+            category: 1,
+          },
+        } as any);
 
         const createLimb = async (LimbClass, offSet: IPosition) => {
             const entity = await new LimbClass().initialize(x + offSet.x, y + offSet.y);
@@ -31,14 +35,12 @@ export default class Player extends IEntity {
             const constraint = Constraint.create({
                 bodyA: this.physicsBody,
                 bodyB: entity.physicsBody,
+                stiffness: 0.6,
                 pointA: {
                     x: offSet.x,
                     y: offSet.y,
                 },
-                pointB: {
-                    x: 0,
-                    y: 0,
-                },
+                
             });
 
             return {
@@ -47,11 +49,17 @@ export default class Player extends IEntity {
             };
         }
 
-        const head = await createLimb(PlayerHead, { x: 0, y: -46 });
+        const head = await createLimb(PlayerHead, { x: 0, y: -40 });
         const leftArm = await createLimb(PlayerArmLeft,
-                { x: -44, y: -34 },
-            );
+          { x: -44, y: -34 },
+        );
         const rightArm = await createLimb(PlayerArmRight, { x: +44, y: -34 });
+        const leftLeg = await createLimb(PlayerLegLeft,
+          { x: -38, y: 46 },
+        );
+        const rightLeg = await createLimb(PlayerLegRight,
+          { x: 38, y: 46 },
+        );
 
         this.composite = Composite.create({
             bodies: [
@@ -59,20 +67,25 @@ export default class Player extends IEntity {
                 leftArm.entity.physicsBody,
                 rightArm.entity.physicsBody,
                 head.entity.physicsBody,
+                leftLeg.entity.physicsBody,
+                rightLeg.entity.physicsBody,
             ],
             constraints: [
                 leftArm.constraint,
                 rightArm.constraint,
                 head.constraint,
+                leftLeg.constraint,
+                rightLeg.constraint,
             ],
         });
 
-        this.limbs = [leftArm.entity, rightArm.entity, head.entity];
-
-        Body.applyForce(this.physicsBody, this.physicsBody.position, {
-            x: 1,
-            y: 0,
-        });
+        this.limbs = [
+          leftArm.entity,
+          rightArm.entity,
+          head.entity,
+          leftLeg.entity,
+          rightLeg.entity,
+        ];
         
         return this;
     }

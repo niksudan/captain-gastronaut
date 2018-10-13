@@ -18,7 +18,7 @@ export default class PlayerHead extends IEntity {
       x,
       y,
       this.image.width,
-      this.image.height,
+      this.image.height
     );
 
     return this;

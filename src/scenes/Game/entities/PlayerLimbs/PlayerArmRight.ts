@@ -20,6 +20,11 @@ export default class PlayerArmRight extends IEntity {
       y,
       this.image.width,
       this.image.height,
+      {
+        collisionFilter: {
+          category: 2,
+        }
+      } as any
     );
 
     return this;

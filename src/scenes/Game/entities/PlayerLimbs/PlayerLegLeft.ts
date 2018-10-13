@@ -10,12 +10,16 @@ export default class PlayerLegLeft extends IEntity {
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerLegLeft.png',
     );
+    this.offSet = {
+      x: 0,
+      y: this.image.height / 2,
+    };
 
     this.physicsBody = Bodies.rectangle(
       x,
       y,
       this.image.width,
-      this.image.height,
+      this.image.height
     );
 
     return this;
