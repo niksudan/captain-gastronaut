@@ -1,5 +1,5 @@
 import IEntity from '../../../definitions/IEntity';
-import { World, Body, Bodies } from 'matter-js';
+import { World, Body } from 'matter-js';
 import { IGameState } from '../../../definitions/IGameState';
 
 export default class Particle extends IEntity {

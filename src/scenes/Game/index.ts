@@ -22,61 +22,33 @@ export default class Game implements IScene {
     this.entitiesToDestroy = [];
   }
 
-  private async createObstacle(gameState: IGameState, ignoreScreen = false) {
+  private async createObstacle(gameState: IGameState) {
     const numberWithinRange = (min: number, max: number) => {
       return Math.random() * (max - 1) + min;
     };
 
-    const numberWithinTwoRanges = (
-      min1: number,
-      max1: number,
-      min2: number,
-      max2: number,
-    ) => {
-      return Math.random() > 0.5
-        ? numberWithinRange(min1, max1)
-        : numberWithinRange(min2, max2);
-    };
-
-    let x: number = 0,
-      y: number = 0;
-    if (!ignoreScreen) {
-      x = numberWithinRange(
-        -MAX_OBSTACLE_CREATION_WIDTH,
-        GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
-      );
-      y = numberWithinRange(
-        -MAX_OBSTACLE_CREATION_HEIGHT,
-        GameSettings.height + MAX_OBSTACLE_CREATION_HEIGHT,
-      );
-    } else {
-      x = numberWithinTwoRanges(
-        -MAX_OBSTACLE_CREATION_WIDTH,
-        0,
-        GameSettings.width,
-        GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
-      );
-      y = numberWithinTwoRanges(
-        -MAX_OBSTACLE_CREATION_WIDTH,
-        0,
-        GameSettings.width,
-        GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
-      );
-    }
+    const x = numberWithinRange(
+      -MAX_OBSTACLE_CREATION_WIDTH,
+      GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
+    );
+    const y = numberWithinRange(
+      -MAX_OBSTACLE_CREATION_HEIGHT,
+      GameSettings.height + MAX_OBSTACLE_CREATION_HEIGHT,
+    );
 
     const obstacle = await new Obstacle().initialize(gameState, x, y);
     this.entities.push(obstacle);
     this.obstacles.push(obstacle);
   }
 
-  private async createObstacles(gameState: IGameState, ignoreScreen = false) {
+  private async createObstacles(gameState: IGameState) {
     for (let i: number = this.obstacles.length; i < MAX_OBSTACLE_COUNT; i++) {
-      await this.createObstacle(gameState, ignoreScreen);
+      await this.createObstacle(gameState);
     }
   }
 
   async initialize(gameState: IGameState): Promise<boolean> {
-    await this.createObstacles(gameState, false);
+    await this.createObstacles(gameState);
     const player = await new Player().initialize(gameState, 300, 200);
 
     gameState.focusedEntity = player;
@@ -94,7 +66,6 @@ export default class Game implements IScene {
       }
     }
     this.entitiesToDestroy = [];
-    this.createObstacles(gameState, true);
     for (let entity of this.entities) {
       entity.update(world, gameState);
     }
