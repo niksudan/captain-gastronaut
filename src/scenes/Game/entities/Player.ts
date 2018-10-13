@@ -7,11 +7,11 @@ import PlayerLegLeft from './PlayerLimbs/PlayerLegLeft';
 import PlayerLegRight from './PlayerLimbs/PlayerLegRight';
 
 import IEntity from '../../../definitions/IEntity';
-import { IGameState } from "../../../definitions/IGameState";
+import { IGameState } from '../../../definitions/IGameState';
 
 interface IPosition {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export default class Player extends IEntity {
@@ -21,7 +21,7 @@ export default class Player extends IEntity {
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
-        this.image = await this.imageLoader.loadImage('/assets/playerBody.png');
+        this.image = await this.imageLoader.loadImage('/assets/images/playerBody.png');
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height);
 
@@ -77,12 +77,6 @@ export default class Player extends IEntity {
         return this;
     }
 
-    update(gameState: IGameState) {
-        for (let limb of this.limbs) {
-            limb.update(gameState);
-        }
-    }
-
     addToWorld(world: World) {
         World.add(world, this.composite);
     }
@@ -92,14 +86,16 @@ export default class Player extends IEntity {
         context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
         context.rotate(this.physicsBody.angle);
 
-        context.drawImage(this.image, -this.image.width / 2, -this.image.height / 2);
+    context.drawImage(
+      this.image,
+      -this.image.width / 2,
+      -this.image.height / 2,
+    );
 
-        context.restore();
+    context.restore();
 
-        for (let limb of this.limbs) {
-            limb.render(context);
-        }
+    for (let limb of this.limbs) {
+      limb.render(context);
     }
-
-
+  }
 }
