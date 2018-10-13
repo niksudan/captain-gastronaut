@@ -1,4 +1,4 @@
-import { Bodies, Body, Composite, World, Constraint } from 'matter-js';
+import { Bodies, Body, Composite, World, Constraint, IEngineDefinition } from 'matter-js';
 import * as randomItem from 'random-item';
 
 import PlayerHead from './PlayerLimbs/PlayerHead';
@@ -9,6 +9,7 @@ import PlayerLegRight from './PlayerLimbs/PlayerLegRight';
 
 import IEntity from '../../../definitions/IEntity';
 import { IGameState } from '../../../definitions/IGameState';
+import Particle from './Particle';
 
 interface IPosition {
   x: number;
@@ -20,6 +21,8 @@ interface ISoundData {
   startTime: number;
 }
 
+let fartParticles = [];
+
 export default class Player extends IEntity {
   physicsBody: Body;
   composite: Composite;
@@ -30,7 +33,18 @@ export default class Player extends IEntity {
   chargeSounds: ISoundData[];
   chargeSound?: ISoundData;
 
+  async initializeParticles() {
+    fartParticles = await Promise.all([
+      await this.imageLoader.loadImage('/assets/images/fart1.png'),
+      await this.imageLoader.loadImage('/assets/images/fart2.png'),
+      await this.imageLoader.loadImage('/assets/images/fart3.png'),
+      await this.imageLoader.loadImage('/assets/images/fart4.png'),
+    ]);
+  }
+
   async initialize(gameState: IGameState, x: number, y: number) {
+    await this.initializeParticles();
+
     this.image = await this.imageLoader.loadImage(
       '/assets/images/playerBody.png',
     );
@@ -124,11 +138,16 @@ export default class Player extends IEntity {
     return this;
   }
 
+  async addParticle(gameState: IGameState, x: number, y: number, images: HTMLImageElement[]) {
+    const particle = await new Particle().initialize(gameState, x, y, images);
+    gameState.currentScene.entities.push(particle);
+  }
+
   addToWorld(world: World) {
     World.add(world, this.composite);
   }
 
-  update(gameState: IGameState) {
+  update(world: World, gameState: IGameState) {
     const ROTATION_SPEED = 0.02;
     const SPEED = 2;
     const BUILD_UP_SPEED = 0.01;
@@ -166,6 +185,10 @@ export default class Player extends IEntity {
             x: Math.cos(angle) * (SPEED * force),
             y: Math.sin(angle) * (SPEED * force),
           });
+
+          const { x, y } = this.physicsBody.position;
+
+          this.addParticle(gameState, x, y, fartParticles);
         }
 
         this.buildUp = 0;

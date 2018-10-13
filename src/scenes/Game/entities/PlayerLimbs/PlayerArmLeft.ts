@@ -1,4 +1,4 @@
-import { Bodies, Body } from 'matter-js';
+import { Bodies, Body, World } from 'matter-js';
 import IEntity from '../../../../definitions/IEntity';
 import { IGameState } from '../../../../definitions/IGameState';
 
@@ -32,6 +32,6 @@ export default class PlayerArmLeft extends IEntity {
     return this;
   }
 
-  update(gameState: IGameState) {
+  update(world: World, gameState: IGameState) {
   }
 }
