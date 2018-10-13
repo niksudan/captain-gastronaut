@@ -4,7 +4,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 
 ## Engine
 
-* Set up
+* ~~Set up~~
 * Ragdoll
 * Player controls (arm movement)
 * Obstacle spawning
@@ -23,9 +23,9 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 
 ## Sprites
 
-* Player body
-* Player header
-* Player arm
+* ~~Player body~~
+* ~~Player head~~
+* ~~Player arm~~
 * Player leg
 * Background
 * Control panel
