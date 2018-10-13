@@ -3,10 +3,11 @@ import { Bodies, Body, World } from 'matter-js';
 import PlayerHead from './PlayerLimbs/PlayerHead';
 import PlayerArmLeft from './PlayerLimbs/PlayerArmLeft';
 import PlayerArmRight from './PlayerLimbs/PlayerArmRight';
+import PlayerLegLeft from './PlayerLimbs/PlayerLegLeft';
+import PlayerLegRight from './PlayerLimbs/PlayerLegRight';
 
 import IEntity from '../../../definitions/IEntity';
 import { IGameState } from "../../../definitions/IGameState";
-import ImageLoader from '../../../Image/ImageLoader';
 
 export default class Player extends IEntity {
     physicsBody: Body;
@@ -14,12 +15,14 @@ export default class Player extends IEntity {
     image: HTMLImageElement;
 
     async initialize(x: number, y: number) {
-        this.image = await new ImageLoader().loadImage('/assets/playerBody.png');
+        this.image = await this.imageLoader.loadImage('/assets/playerBody.png');
      
         this.limbs = [
-            await new PlayerHead().initialize(x + 32, y - 64),
+            await new PlayerHead().initialize(x, y - 64),
             await new PlayerArmLeft().initialize(x - 30, y),
             await new PlayerArmRight().initialize(x + 30, y),
+            await new PlayerLegLeft().initialize(x - 10, y + 80),
+            await new PlayerLegRight().initialize(x + 10, y + 80),
         ];
 
         this.physicsBody = Body.create({
@@ -53,7 +56,7 @@ export default class Player extends IEntity {
         context.save();
         context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
 
-        context.drawImage(this.image, 0, 0);
+        context.drawImage(this.image, -this.image.width / 2, -this.image.height / 2);
 
         context.restore();
 
