@@ -33,7 +33,8 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Small obstacle
 * Medium obstacle
 * Large obstacle
-* Earth under attack
+* Planet under attack
+* Planet exploded
 
 ### Optional
 
