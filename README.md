@@ -16,6 +16,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Difficulty progression (spawn harder obstacles)
 * Random flinging
 * Shitstorm
+* Game over & screen flash
 * Menu
 
 ### Optional
