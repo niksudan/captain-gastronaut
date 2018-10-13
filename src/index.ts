@@ -1,4 +1,5 @@
 import { Engine, World } from 'matter-js';
+import { flatMap } from 'lodash';
 import GameSettings from './data/GameSettings';
 import { IScene } from './definitions/IScene';
 import { IGameState } from './definitions/IGameState';
@@ -40,8 +41,11 @@ const main = async () => {
     SetScene(new Game());
 
     await gameState.currentScene.initialize();
-    
-    World.add(engine.world, gameState.currentScene.entities.map((entity) => entity.getPhysicsBody()));
+
+
+    World.add(engine.world, flatMap(gameState.currentScene.entities,
+        (entity) => entity.getPhysicsBodies()
+    ));
 
     const render = () => {
 

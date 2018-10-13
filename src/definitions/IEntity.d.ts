@@ -5,9 +5,8 @@ interface IEntity {
     physicsBody: Body;
     image: HTMLImageElement;
 
-
-    initialize(x: number, y: number): Promise<IEntity>;
+    initialize(x: number, y: number, args?: any): Promise<IEntity>;
     update(gameState: IGameState);
-    getPhysicsBody(): Body;
+    getPhysicsBodies(): Body[];
     render(context: CanvasRenderingContext2D);
 }
