@@ -19,6 +19,8 @@ export default class Player extends IEntity {
     composite: Composite;
     limbs: IEntity[];
     image: HTMLImageElement;
+    buildUp: number = 0.0;
+    head: PlayerHead;
 
     async initialize(x: number, y: number) {
         this.image = await this.imageLoader.loadImage('/assets/images/playerBody.png');
@@ -53,6 +55,7 @@ export default class Player extends IEntity {
         }
 
         const head = await createLimb(PlayerHead, { x: 0, y: -40 });
+        this.head = head.entity;
         const leftArm = await createLimb(PlayerArmLeft,
           { x: -44, y: -34 },
         );
@@ -99,6 +102,8 @@ export default class Player extends IEntity {
 
     update(gameState: IGameState) {
       const ROTATION_SPEED = 0.02;
+      const SPEED = 0.1;
+      const BUILD_UP_SPEED = 0.025;
 
       if (gameState.keyPresses['ArrowLeft']) {
         Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -106,6 +111,33 @@ export default class Player extends IEntity {
 
       if (gameState.keyPresses['ArrowRight']) {
         Body.setAngularVelocity(this.physicsBody, ROTATION_SPEED);
+      }
+
+      if (gameState.keyPresses['ArrowUp']) {
+        if (this.buildUp < 1.0) {
+          this.buildUp += BUILD_UP_SPEED;
+        }
+
+        this.head.setFace('CHARGING');
+      } else {
+
+        if (this.buildUp > 0) {
+          const angle = this.physicsBody.angle - Math.PI / 2;
+
+          if (this.buildUp > 0.5) {
+            Body.applyForce(this.physicsBody, this.physicsBody.position, {
+              x: Math.cos(angle) * (SPEED * this.buildUp),
+              y: Math.sin(angle) * (SPEED * this.buildUp),
+            });
+          }
+
+          this.buildUp = 0;
+        }
+        if (this.physicsBody.speed > 1) {
+          this.head.setFace('POOP');
+        } else {
+          this.head.setFace('PASSIVE');
+        }
       }
     }
 
