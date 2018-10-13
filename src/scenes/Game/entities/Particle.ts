@@ -8,11 +8,8 @@ export default class Particle extends IEntity {
   image: HTMLImageElement;
   buildUp: number = 0.0;
 
-  async initialize(gameState: IGameState, x: number, y: number, images: string[]) {
-    const imageSelected = images[~~(Math.random() * (images.length - 1))];
-    this.image = await this.imageLoader.loadImage(
-      `/assets/images/${imageSelected}`,
-    );
+  async initialize(gameState: IGameState, x: number, y: number, images: HTMLImageElement[]) {
+    this.image = images[~~(Math.random() * (images.length - 1))];
     this.physicsBody = Bodies.rectangle(x, y, 0, 0);
     this.physicsBody.force.y = 0;
     return this;

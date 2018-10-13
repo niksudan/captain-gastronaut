@@ -32,5 +32,5 @@ export default abstract class IEntity {
     context.restore();
   }
 
-  update(gameState: IGameState) {}
+  update(world: World, gameState: IGameState) {}
 }

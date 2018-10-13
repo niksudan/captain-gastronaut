@@ -5,6 +5,7 @@ import { IGameState } from '../../definitions/IGameState';
 import Player from './entities/Player';
 import Obstacle from './entities/Obstacle';
 import GameSettings from '../../data/GameSettings';
+import { World } from 'matter-js';
 
 const MAX_OBSTACLE_COUNT = 10;
 const MAX_OBSTACLE_CREATION_WIDTH = GameSettings.width + 200;
@@ -82,10 +83,10 @@ export default class Game implements IScene {
     return true;
   }
 
-  update(gameState: IGameState) {
+  update(world: World, gameState: IGameState) {
     this.createObstacles(gameState, true);
     for (let entity of this.entities) {
-      entity.update(gameState);
+      entity.update(world, gameState);
     }
   }
 

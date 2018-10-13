@@ -86,7 +86,7 @@ const main = async () => {
           );
         }
 
-        gameState.currentScene.update(gameState);
+        gameState.currentScene.update(engine.world, gameState);
         gameState.currentScene.render(context);
     
         Engine.update(engine);
