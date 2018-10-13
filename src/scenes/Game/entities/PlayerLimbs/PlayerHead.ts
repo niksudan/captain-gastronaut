@@ -1,9 +1,9 @@
 import { Bodies, Body } from 'matter-js';
 import ImageLoader from '../../../../Image/ImageLoader';
-import { IEntity } from '../../../../definitions/IEntity';
+import IEntity from '../../../../definitions/IEntity';
 import { IGameState } from '../../../../definitions/IGameState';
 
-export default class Player implements IEntity {
+export default class Player extends IEntity {
     physicsBody: Body;
     image: HTMLImageElement;
 
@@ -21,14 +21,5 @@ export default class Player implements IEntity {
     
     getPhysicsBodies(): Body[] {
         return [this.physicsBody];
-    }
-
-    render(context: CanvasRenderingContext2D) {
-        context.save();
-        context.translate(this.physicsBody.position.x, this.physicsBody.position.y);
-
-        context.drawImage(this.image, 0, 0);
-
-        context.restore();
     }
 }

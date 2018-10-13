@@ -4,11 +4,11 @@ import PlayerHead from './PlayerLimbs/PlayerHead';
 import PlayerArmLeft from './PlayerLimbs/PlayerArmLeft';
 import PlayerArmRight from './PlayerLimbs/PlayerArmRight';
 
-import { IEntity } from "../../../definitions/IEntity";
+import IEntity from '../../../definitions/IEntity';
 import { IGameState } from "../../../definitions/IGameState";
 import ImageLoader from '../../../Image/ImageLoader';
 
-export default class Player implements IEntity {
+export default class Player extends IEntity {
     physicsBody: Body;
     limbs: IEntity[];
     image: HTMLImageElement;
