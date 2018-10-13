@@ -101,7 +101,7 @@ export default class Player extends IEntity {
     update(gameState: IGameState) {
       const ROTATION_SPEED = 0.02;
       const SPEED = 0.1;
-      const BUILD_UP_SPEED = 0.05;
+      const BUILD_UP_SPEED = 0.025;
 
       if (gameState.keyPresses['ArrowLeft']) {
         Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -118,10 +118,12 @@ export default class Player extends IEntity {
       } else if (this.buildUp > 0)  {
         const angle = this.physicsBody.angle - Math.PI / 2;
 
-        Body.applyForce(this.physicsBody, this.physicsBody.position, {
-          x: Math.cos(angle) * (SPEED * this.buildUp),
-          y: Math.sin(angle) * (SPEED * this.buildUp),
-        });
+        if (this.buildUp > 0.5) {
+          Body.applyForce(this.physicsBody, this.physicsBody.position, {
+            x: Math.cos(angle) * (SPEED * this.buildUp),
+            y: Math.sin(angle) * (SPEED * this.buildUp),
+          });
+        }
 
         this.buildUp = 0;
       }
