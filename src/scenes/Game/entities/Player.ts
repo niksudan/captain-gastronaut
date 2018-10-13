@@ -25,9 +25,12 @@ export default class Player extends IEntity {
 
         this.physicsBody = Bodies.rectangle(x, y, this.image.width, this.image.height, {
           collisionFilter: {
-            category: 1,
-          },
-        } as any);
+            category: 2,
+            mask: 0,
+          } as any,
+        });
+
+        this.physicsBody.force.y = 0;
 
         const createLimb = async (LimbClass, offSet: IPosition) => {
             const entity = await new LimbClass().initialize(x + offSet.x, y + offSet.y);

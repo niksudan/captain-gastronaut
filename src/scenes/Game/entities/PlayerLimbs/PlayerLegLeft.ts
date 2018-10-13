@@ -19,8 +19,15 @@ export default class PlayerLegLeft extends IEntity {
       x,
       y,
       this.image.width,
-      this.image.height
+      this.image.height,
+      {
+        collisionFilter: {
+          category: 2,
+          mask: 0,
+        } as any,
+      }
     );
+    this.physicsBody.force.y = 0;
 
     return this;
   }

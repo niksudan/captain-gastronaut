@@ -31,6 +31,7 @@ document.addEventListener('keydown', (event) => {
 
 const SetScene = (scene: IScene) => {
     engine = Engine.create();
+    engine.world.gravity.scale = 0;
     engine.world.gravity.y = 0;
     gameState.currentScene = scene;
 }

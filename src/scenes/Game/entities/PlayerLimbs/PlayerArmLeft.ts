@@ -23,9 +23,11 @@ export default class PlayerArmLeft extends IEntity {
       {
         collisionFilter: {
           category: 2,
-        }
-      } as any
+          mask: 0,
+        } as any,
+      }
     );
+    this.physicsBody.force.y = 0;
 
     return this;
   }
