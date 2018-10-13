@@ -15,11 +15,4 @@ export default class Player extends IEntity {
         return this;
     }
 
-    update(gameState: IGameState) {
-        
-    }
-    
-    getPhysicsBodies(): Body[] {
-        return [this.physicsBody];
-    }
 }

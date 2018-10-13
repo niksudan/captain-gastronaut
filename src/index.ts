@@ -43,9 +43,9 @@ const main = async () => {
     await gameState.currentScene.initialize();
 
 
-    World.add(engine.world, flatMap(gameState.currentScene.entities,
-        (entity) => entity.getPhysicsBodies()
-    ));
+    for (let entity of gameState.currentScene.entities) {
+        entity.addToWorld(engine.world);
+    }
 
     const render = () => {
 
