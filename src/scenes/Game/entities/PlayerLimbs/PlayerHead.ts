@@ -2,9 +2,9 @@ import { Bodies, Body } from 'matter-js';
 import IEntity from '../../../../definitions/IEntity';
 
 interface faces {
-  'PASSIVE': HTMLImageElement;
-  'CHARGING': HTMLImageElement;
-  'POOP': HTMLImageElement;
+  PASSIVE: HTMLImageElement;
+  CHARGING: HTMLImageElement;
+  POOP: HTMLImageElement;
 }
 
 export default class PlayerHead extends IEntity {
@@ -14,15 +14,13 @@ export default class PlayerHead extends IEntity {
 
   async initialize(x: number, y: number) {
     this.faces = {
-      'PASSIVE': await this.imageLoader.loadImage(
+      PASSIVE: await this.imageLoader.loadImage(
         '/assets/images/playerHead.png',
       ),
-      'CHARGING': await this.imageLoader.loadImage(
-        '/assets/images/playerHead.png',
+      CHARGING: await this.imageLoader.loadImage(
+        '/assets/images/playerHead2.png',
       ),
-      'POOP': await this.imageLoader.loadImage(
-        '/assets/images/playerHead.png',
-      ),
+      POOP: await this.imageLoader.loadImage('/assets/images/playerHead3.png'),
     };
 
     this.image = this.faces['PASSIVE'];
@@ -42,7 +40,7 @@ export default class PlayerHead extends IEntity {
           category: 2,
           mask: 2,
         } as any,
-      }
+      },
     );
     this.physicsBody.force.y = 0;
 
