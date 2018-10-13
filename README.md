@@ -7,8 +7,8 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Set up~~
 * ~~Ragdoll~~
 * ~~Turning the player~~
-* Applying fart force
-* Viewport panning
+* ~~Applying fart force~~
+* ~~Viewport panning~~
 * Obstacle spawning
 * Control panel interaction
 * Choosing control panels to activate
@@ -40,7 +40,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Background
 * Planet under attack
 * Planet exploded
-* Player head expressions (charging fart, shitstorm)
+* ~~Player head expressions (charging fart, shitstorm)~~
 
 ### Optional
 
