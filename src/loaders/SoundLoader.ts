@@ -5,7 +5,6 @@ export default class SoundLoader {
 
     return new Promise<HTMLAudioElement>((resolve) => {
       sound.oncanplaythrough = () => {
-        console.log(sound);
         resolve(sound);
       };
     });
