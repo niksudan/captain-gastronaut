@@ -6,6 +6,7 @@ import { IGameState } from './IGameState';
 export default abstract class IEntity {
   physicsBody: Body;
   image: HTMLImageElement;
+  uniqueId: string;
   offSet = {
     x: 0,
     y: 0,
@@ -13,6 +14,10 @@ export default abstract class IEntity {
 
   imageLoader = new ImageLoader();
   soundLoader = new SoundLoader();
+
+  constructor() {
+    this.uniqueId = new Date().toTimeString();
+  }
 
   abstract initialize(gameState: IGameState, x: number, y: number, args?: any): Promise<IEntity>;
 

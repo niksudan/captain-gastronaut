@@ -1,3 +1,4 @@
+import { findIndex } from 'lodash';
 import { IScene } from '../../definitions/IScene';
 import IEntity from '../../definitions/IEntity';
 import { IGameState } from '../../definitions/IGameState';
@@ -13,10 +14,12 @@ const MAX_OBSTACLE_CREATION_HEIGHT = GameSettings.height + 200;
 
 export default class Game implements IScene {
   entities: IEntity[];
+  entitiesToDestroy: string[];
   obstacles: IEntity[] = [];
 
   constructor() {
     this.entities = [];
+    this.entitiesToDestroy = [];
   }
 
   private async createObstacle(gameState: IGameState, ignoreScreen = false) {
@@ -84,6 +87,13 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
+    if (this.entitiesToDestroy.length) {
+      for (let uniqueId of this.entitiesToDestroy) {
+        const index = findIndex(this.entities, { uniqueId });
+        this.entities.splice(index, 1);
+      }
+    }
+    this.entitiesToDestroy = [];
     this.createObstacles(gameState, true);
     for (let entity of this.entities) {
       entity.update(world, gameState);
