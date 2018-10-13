@@ -1,4 +1,4 @@
-import { IEntity } from "./IEntity";
+import IEntity from "./IEntity";
 import { IGameState } from "./IGameState";
 
 interface IScene {

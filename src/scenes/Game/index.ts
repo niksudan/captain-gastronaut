@@ -1,5 +1,5 @@
 import { IScene } from "../../definitions/IScene";
-import { IEntity } from "../../definitions/IEntity";
+import IEntity from "../../definitions/IEntity";
 import { IGameState } from "../../definitions/IGameState";
 
 import Player from './entities/Player';
