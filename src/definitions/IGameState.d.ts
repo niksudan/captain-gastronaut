@@ -11,4 +11,5 @@ interface IGameState {
     shakeScreen(shakeForce: number);
     shakeForce: number;
     screenShakeTimer: number;
+    setScene(scene: IScene);
 }
