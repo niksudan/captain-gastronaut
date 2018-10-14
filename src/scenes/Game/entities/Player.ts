@@ -42,6 +42,7 @@ export default class Player extends IEntity {
   canFart: boolean = false;
   fartSounds: HTMLAudioElement[];
   bigFartSounds: HTMLAudioElement[];
+  isFarting: boolean = false;
 
   async initializeParticles() {
     fartParticles = await Promise.all([
@@ -166,6 +167,7 @@ export default class Player extends IEntity {
     const ROTATION_SPEED = 0.025;
     const SPEED = 1.5;
     const BUILD_UP_SPEED = 0.008;
+    const { x, y } = this.physicsBody.position;
 
     if (gameState.keyPresses['ArrowLeft']) {
       Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -201,29 +203,38 @@ export default class Player extends IEntity {
       // release the crap-ken
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
+        const force = Math.min(1, this.buildUp);
+
+        // wheeeee
         if (this.buildUp > 0.1) {
-          // wheeeee
-          const force = Math.min(1, this.buildUp);
           Body.applyForce(this.physicsBody, this.physicsBody.position, {
             x: Math.cos(angle) * (SPEED * force),
             y: Math.sin(angle) * (SPEED * force),
           });
 
           // puff daddies
-          const { x, y } = this.physicsBody.position;
-          for (let i: number = 0; i < Math.round(force * 5); i++) {
+          const fartCount = Math.max(2, Math.round(force * 5));
+          for (let i: number = 0; i < fartCount; i++) {
             this.addParticle(gameState, x, y, fartParticles);
           }
         }
 
-        // gotta play them bottom burps
         if (this.canFart) {
           this.canFart = false;
+
+          // gotta play them bottom burps
           if (this.buildUp > 0.5) {
             randomItem(this.bigFartSounds).play();
           } else {
             randomItem(this.fartSounds).play();
           }
+
+          // trigger the fart trail
+          this.isFarting = true;
+          const fartTimeout = Math.max(200, Math.round(force * 500));
+          window.setTimeout(() => {
+            this.isFarting = false;
+          }, fartTimeout);
         }
 
         this.buildUp = 0;
@@ -234,6 +245,11 @@ export default class Player extends IEntity {
         this.head.setFace('POOP');
       } else {
         this.head.setFace('PASSIVE');
+      }
+
+      // fart trail
+      if (this.isFarting && Math.random() > 0.3) {
+        this.addParticle(gameState, x, y, fartParticles);
       }
     }
   }
