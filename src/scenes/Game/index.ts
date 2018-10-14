@@ -15,11 +15,13 @@ const MAX_OBSTACLE_CREATION_HEIGHT = GameSettings.height + 200;
 export default class Game implements IScene {
   entities: IEntity[];
   entitiesToDestroy: string[];
+  particlesToAdd: IEntity[];
   obstacles: IEntity[] = [];
 
   constructor() {
     this.entities = [];
     this.entitiesToDestroy = [];
+    this.particlesToAdd = [];
   }
 
   private async createObstacle(gameState: IGameState) {
@@ -59,6 +61,10 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
+    if (this.particlesToAdd.length) {
+      this.entities = [...this.particlesToAdd, ...this.entities];
+      this.particlesToAdd = [];
+    }
     if (this.entitiesToDestroy.length) {
       for (let uniqueId of this.entitiesToDestroy) {
         const index = findIndex(this.entities, { uniqueId });

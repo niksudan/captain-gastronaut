@@ -156,7 +156,7 @@ export default class Player extends IEntity {
     images: HTMLImageElement[],
   ) {
     const particle = await new Particle().initialize(gameState, x, y, images);
-    gameState.currentScene.entities.push(particle);
+    gameState.currentScene.particlesToAdd.push(particle);
   }
 
   addToWorld(world: World) {
