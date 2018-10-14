@@ -9,6 +9,16 @@ export default class Obstacle extends IEntity {
   limbs: IEntity[];
   image: HTMLImageElement;
   buildUp: number = 0.0;
+  bumpSounds: HTMLAudioElement[];
+  bumpSound: HTMLAudioElement;
+
+  async initializeSounds() {
+    this.bumpSounds = [
+      await this.soundLoader.loadSound('/assets/sounds/bump1.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/bump2.ogg'),
+      await this.soundLoader.loadSound('/assets/sounds/bump3.ogg'),
+    ];
+  }
 
   async initialize(gameState: IGameState, x: number, y: number) {
     const imageSelected =
@@ -17,6 +27,8 @@ export default class Obstacle extends IEntity {
     this.image = await this.imageLoader.loadImage(
       `/assets/images/${imageSelected}`,
     );
+
+    await this.initializeSounds();
 
     this.physicsBody = Bodies.rectangle(
       x,
@@ -35,7 +47,10 @@ export default class Obstacle extends IEntity {
     Body.rotate(this.physicsBody, (Math.random() * 360) * (180 / Math.PI));
 
     gameState.subscribeToEvent('obstacle', () => {
-      // TODO: IMPLEMENT ME NIK
+      if (this.bumpSound !== null || this.bumpSound.paused) {
+        this.bumpSound = this.bumpSounds[~~(Math.random() * this.bumpSounds.length)];
+        this.bumpSound.play();
+      }
     });
 
     this.physicsBody.force.y = 0;
