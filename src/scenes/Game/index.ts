@@ -5,6 +5,7 @@ import { IGameState } from '../../definitions/IGameState';
 
 import Player from './entities/Player';
 import Obstacle from './entities/Obstacle';
+import Walls from './entities/Walls';
 import GameSettings from '../../data/GameSettings';
 import { World } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
@@ -39,6 +40,9 @@ export default class Game implements IScene {
     );
 
     const obstacle = await new Obstacle().initialize(gameState, x, y);
+    const walls = await new Walls().initialize(gameState);
+
+    this.entities.push(walls);
     this.entities.push(obstacle);
     this.obstacles.push(obstacle);
   }
