@@ -4,6 +4,7 @@ import { IGameState } from '../../definitions/IGameState';
 import { World } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
 import GameSettings from '../../data/GameSettings';
+import Game from '../Game';
 
 export default class EndGame implements IScene {
   entities: IEntity[] = [];
@@ -34,11 +35,19 @@ export default class EndGame implements IScene {
     return true;
   }
 
-  update(world: World, gameState: IGameState) {
+  async update(world: World, gameState: IGameState) {
     if (this.flash > 0) {
       this.flash -= 0.05;
     }
     this.invaderBob += 1;
+    if (
+      this.canRestart &&
+      (gameState.keyPresses['ArrowLeft'] ||
+      gameState.keyPresses['ArrowRight'] ||
+      gameState.keyPresses['ArrowUp'])
+    ) {
+      await gameState.setScene(new Game());
+    }
   }
 
   render(context: CanvasRenderingContext2D) {

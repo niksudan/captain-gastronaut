@@ -18,7 +18,7 @@ export default class IntroScreen implements IScene {
 
   async update(world: World, gameState: IGameState) {
     // Use me nik 😘
-    // gameState.setScene(new Game());
+    // await gameState.setScene(new Game());
   }
 
   render(context: CanvasRenderingContext2D) {
