@@ -17,103 +17,99 @@ let engine = Engine.create();
 World.add(engine.world, []);
 
 const gameState = {
-    currentScene: null,
-    focusedEntity: null,
-    keyPresses: {},
-    collisionSubscriptions: {},
-    subscribeToEvent(name: string, subscription: () => void) {
-      if (!gameState.collisionSubscriptions[name]) {
-        gameState.collisionSubscriptions[name] = [];
-      }
-
-      gameState.collisionSubscriptions[name].push(subscription);
+  currentScene: null,
+  focusedEntity: null,
+  keyPresses: {},
+  collisionSubscriptions: {},
+  subscribeToEvent(name: string, subscription: () => void) {
+    if (!gameState.collisionSubscriptions[name]) {
+      gameState.collisionSubscriptions[name] = [];
     }
+
+    gameState.collisionSubscriptions[name].push(subscription);
+  },
 } as IGameState;
 
 document.addEventListener('keyup', (event) => {
-    gameState.keyPresses[event.key] = false;
+  gameState.keyPresses[event.key] = false;
 });
 
 document.addEventListener('keydown', (event) => {
-    gameState.keyPresses[event.key] = true;
+  gameState.keyPresses[event.key] = true;
 });
 
 const SetScene = (scene: IScene) => {
-    engine = Engine.create();
-    engine.world.gravity.scale = 0;
-    engine.world.gravity.y = 0;
-    gameState.collisionSubscriptions = {};
-    gameState.currentScene = scene;
+  engine = Engine.create();
+  engine.world.gravity.scale = 0;
+  engine.world.gravity.y = 0;
+  gameState.collisionSubscriptions = {};
+  gameState.currentScene = scene;
 
-    Events.on(engine, 'collisionStart', function(event) {
-      for (let pair of event.pairs) {
+  Events.on(engine, 'collisionStart', function(event) {
+    for (let pair of event.pairs) {
+      const subscriptions = [
+        ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
+        ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
+      ];
 
-        const subscriptions = [
-          ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
-          ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
-        ];
-
-        subscriptions.map((subscription) => subscription());
-      }
-    });
-}
+      subscriptions.map((subscription) => subscription());
+    }
+  });
+};
 
 const context = canvas.getContext('2d');
 
 const main = async () => {
+  SetScene(new Game());
 
-    SetScene(new Game());
+  await gameState.currentScene.initialize(gameState);
 
-    await gameState.currentScene.initialize(gameState);
+  for (let entity of gameState.currentScene.entities) {
+    entity.addToWorld(engine.world);
+  }
 
+  const handleCanvasResize = () => {
+    const parent = canvas.parentElement;
+    const heightRatio = GameSettings.height / GameSettings.width;
 
-    for (let entity of gameState.currentScene.entities) {
-        entity.addToWorld(engine.world);
+    let canvasWidth = parent.clientWidth;
+    let canvasHeight = parent.clientWidth * heightRatio;
+
+    if (canvasHeight > parent.clientHeight) {
+      canvasWidth = parent.clientHeight / heightRatio;
+      canvasHeight = parent.clientHeight;
     }
 
-    const handleCanvasResize = () => {
-      const parent = canvas.parentElement;
-      const heightRatio = GameSettings.height / GameSettings.width;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
+  };
 
-      let canvasWidth = parent.clientWidth;
-      let canvasHeight = parent.clientWidth * heightRatio;
+  const render = () => {
+    context.save();
 
-      if (canvasHeight > parent.clientHeight) {
-        canvasWidth = parent.clientHeight / heightRatio;
-        canvasHeight = parent.clientHeight;
-      }
+    handleCanvasResize();
 
-      canvas.style.width = `${canvasWidth}px`;
-      canvas.style.height = `${canvasHeight}px`;
-    };
+    context.clearRect(0, 0, GameSettings.width, GameSettings.height);
 
-    const render = () => {
+    if (gameState.focusedEntity !== null) {
+      const position = gameState.focusedEntity.physicsBody.position;
 
-        context.save();
+      context.translate(
+        -position.x + GameSettings.width / 2,
+        -position.y + GameSettings.height / 2,
+      );
+    }
 
-        handleCanvasResize();
+    gameState.currentScene.update(engine.world, gameState);
+    gameState.currentScene.render(context);
 
-        context.clearRect(0, 0, GameSettings.width, GameSettings.height);
+    Engine.update(engine);
+    requestAnimationFrame(render);
 
-        if (gameState.focusedEntity !== null) {
-          const position = gameState.focusedEntity.physicsBody.position;
+    context.restore();
+  };
 
-          context.translate(
-            -position.x + GameSettings.width / 2,
-            -position.y + GameSettings.height / 2,
-          );
-        }
-
-        gameState.currentScene.update(engine.world, gameState);
-        gameState.currentScene.render(context);
-    
-        Engine.update(engine);
-        requestAnimationFrame(render);
-
-        context.restore();
-    };
-    
-    render();
-}
+  render();
+};
 
 main();
