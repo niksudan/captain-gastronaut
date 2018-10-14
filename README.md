@@ -15,12 +15,12 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Timer
 * Difficulty progression (spawn harder obstacles)
 * Random flinging
-* Shitstorm
 * Game over & screen flash
 * Menu
 
 ### Optional
 
+* Shitstorm
 * Turn acceleration
 * Screen shake on flings
 * Invader spawning
