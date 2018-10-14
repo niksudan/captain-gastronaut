@@ -122,8 +122,6 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
-    
-
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
       this.particlesToAdd = [];
@@ -143,14 +141,14 @@ export default class Game implements IScene {
 
     // Add some fling if time runs out
     if (this.flingTimer < 0) {
-      const FLING_FORCE = this.score / 20;
+      const FLING_FORCE = this.score / 10;
 
       const FLING_DIRECTION = Math.random() * 360;
       this.flingTimer = randomValue(50, 20);
       fling.x = Math.cos(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
       fling.y = Math.sin(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
 
-      gameState.shakeScreen(this.score * 5);
+      gameState.shakeScreen(Math.min(50, this.score * 5));
 
       this.flingSound.play();
     }
