@@ -12,6 +12,7 @@ import ImageLoader from '../../loaders/ImageLoader';
 import Panel from './entities/Panel';
 import SoundLoader from '../../loaders/SoundLoader';
 import Timer from './entities/Timer';
+import EndGame from '../EndGame';
 
 const randomValue = (max: number, min: number) => {
   return Math.random() * (max - min) + min;
@@ -156,7 +157,7 @@ export default class Game implements IScene {
     return true;
   }
 
-  update(world: World, gameState: IGameState) {
+  async update(world: World, gameState: IGameState) {
     const DANGER_SPEED = 0.00075;
 
     if (this.particlesToAdd.length) {
@@ -217,6 +218,7 @@ export default class Game implements IScene {
 
     if (this.dangerTime <= 0) {
       // TODO: Blow up the world lol
+      await gameState.setScene(new EndGame());
     }
   }
 

@@ -48,7 +48,32 @@ const gameState = {
       entityPosition.y > focusedPosition.y - GameSettings.height &&
       entityPosition.y < focusedPosition.y + GameSettings.height
     );
-  }
+  },
+  async setScene(scene: IScene) {
+    engine = Engine.create();
+    engine.world.gravity.scale = 0;
+    engine.world.gravity.y = 0;
+    gameState.focusedEntity = null;
+    gameState.collisionSubscriptions = {};
+    gameState.currentScene = scene;
+  
+    Events.on(engine, 'collisionStart', function(event) {
+      for (let pair of event.pairs) {
+        const subscriptions = [
+          ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
+          ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
+        ];
+  
+        subscriptions.map((subscription) => subscription(gameState));
+      }
+    });
+
+    await gameState.currentScene.initialize(gameState);
+
+    for (let entity of gameState.currentScene.entities) {
+      entity.addToWorld(engine.world);
+    }
+  },
 } as IGameState;
 
 document.addEventListener('keyup', (event) => {
@@ -59,35 +84,10 @@ document.addEventListener('keydown', (event) => {
   gameState.keyPresses[event.key] = true;
 });
 
-const SetScene = (scene: IScene) => {
-  engine = Engine.create();
-  engine.world.gravity.scale = 0;
-  engine.world.gravity.y = 0;
-  gameState.collisionSubscriptions = {};
-  gameState.currentScene = scene;
-
-  Events.on(engine, 'collisionStart', function(event) {
-    for (let pair of event.pairs) {
-      const subscriptions = [
-        ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
-        ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
-      ];
-
-      subscriptions.map((subscription) => subscription(gameState));
-    }
-  });
-};
-
 const context = canvas.getContext('2d');
 
 const main = async () => {
-  SetScene(new Game());
-
-  await gameState.currentScene.initialize(gameState);
-
-  for (let entity of gameState.currentScene.entities) {
-    entity.addToWorld(engine.world);
-  }
+  await gameState.setScene(new Game());
 
   const handleCanvasResize = () => {
     const parent = canvas.parentElement;
@@ -105,7 +105,7 @@ const main = async () => {
     canvas.style.height = `${canvasHeight}px`;
   };
 
-  const render = () => {
+  const render = async () => {
     context.save();
 
     handleCanvasResize();
@@ -126,7 +126,7 @@ const main = async () => {
       context.translate(Math.sin(gameState.screenShakeTimer * 50) * gameState.shakeForce, 0);
     }
 
-    gameState.currentScene.update(engine.world, gameState);
+    await gameState.currentScene.update(engine.world, gameState);
     gameState.currentScene.render(context);
 
     Engine.update(engine);
