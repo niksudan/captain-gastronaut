@@ -7,6 +7,7 @@ import Player from './entities/Player';
 import Obstacle from './entities/Obstacle';
 import GameSettings from '../../data/GameSettings';
 import { World } from 'matter-js';
+import ImageLoader from '../../loaders/ImageLoader';
 
 const MAX_OBSTACLE_COUNT = 10;
 const MAX_OBSTACLE_CREATION_WIDTH = GameSettings.width + 200;
@@ -17,6 +18,7 @@ export default class Game implements IScene {
   entitiesToDestroy: string[];
   particlesToAdd: IEntity[];
   obstacles: IEntity[] = [];
+  background: HTMLImageElement;
 
   constructor() {
     this.entities = [];
@@ -51,12 +53,12 @@ export default class Game implements IScene {
 
   async initialize(gameState: IGameState): Promise<boolean> {
     await this.createObstacles(gameState);
+    this.background = await new ImageLoader().loadImage(
+      '/assets/images/background.png',
+    );
     const player = await new Player().initialize(gameState, 300, 200);
-
     gameState.focusedEntity = player;
-
     await Promise.all([this.entities.push(player)]);
-
     return true;
   }
 
@@ -78,6 +80,11 @@ export default class Game implements IScene {
   }
 
   render(context: CanvasRenderingContext2D) {
+    context.drawImage(
+      this.background,
+      -(GameSettings.worldWidth / 2),
+      -(GameSettings.worldHeight / 2),
+    );
     for (let entity of this.entities) {
       entity.render(context);
     }
