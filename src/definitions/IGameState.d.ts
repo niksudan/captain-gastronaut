@@ -1,5 +1,5 @@
-import { IScene } from "./IScene";
-import IEntity from "./IEntity";
+import { IScene } from './IScene';
+import IEntity from './IEntity';
 
 interface IGameState {
     currentScene: IScene;

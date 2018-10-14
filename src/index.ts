@@ -64,7 +64,7 @@ const gameState = {
           ...(gameState.collisionSubscriptions[pair.bodyA.label] || []),
           ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
         ];
-  
+
         subscriptions.map((subscription) => subscription(gameState));
       }
     });
@@ -128,7 +128,10 @@ const main = async () => {
 
     if (gameState.screenShakeTimer > 0) {
       gameState.screenShakeTimer -= 0.1;
-      context.translate(Math.sin(gameState.screenShakeTimer * 50) * gameState.shakeForce, 0);
+      context.translate(
+        Math.sin(gameState.screenShakeTimer * 50) * gameState.shakeForce,
+        0,
+      );
     }
 
     await gameState.currentScene.update(engine.world, gameState);
