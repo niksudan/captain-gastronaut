@@ -1,4 +1,4 @@
-import { World } from "matter-js";
+import { World, Body } from "matter-js";
 import { IGameState } from "../../definitions/IGameState";
 import { findIndex } from 'lodash';
 import IEntity from "../../definitions/IEntity";
@@ -22,6 +22,7 @@ export default class StartGame implements IScene {
   async initialize(gameState: IGameState) {
     const player = await new Player().initialize(gameState, 100, GameSettings.height / 2);
     this.player = player;
+    Body.setAngularVelocity(this.player.physicsBody, 0.01);
     this.logo = await this.imageLoader.loadImage('./assets/images/logo.png');
     const button = await new Button().initialize(gameState, GameSettings.width - 66, GameSettings.height / 2, () => {
       this.startGame = true;
