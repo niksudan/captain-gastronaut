@@ -11,9 +11,9 @@ export default class Walls extends IEntity {
 
   async initializeSounds() {
     this.bumpSounds = [
-      await this.soundLoader.loadSound('/assets/sounds/bump1.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bump2.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bump3.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump1.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump2.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump3.ogg'),
     ];
   }
 

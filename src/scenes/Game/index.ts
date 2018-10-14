@@ -92,7 +92,7 @@ export default class Game implements IScene {
     await this.createPanels();
     await this.createObstacles(gameState);
     this.background = await new ImageLoader().loadImage(
-      '/assets/images/background.png',
+      './assets/images/background.png',
     );
     const player = await new Player().initialize(gameState, 0, 0);
 

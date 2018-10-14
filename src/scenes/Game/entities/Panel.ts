@@ -17,10 +17,10 @@ export default class Panel {
   async initialize() {
     const imageLoader = new ImageLoader();
     const audioLoader = new SoundLoader();
-    this.imagePassive = await imageLoader.loadImage('/assets/images/panel.png');
-    this.imageActive = await imageLoader.loadImage('/assets/images/panelActive.png');
+    this.imagePassive = await imageLoader.loadImage('./assets/images/panel.png');
+    this.imageActive = await imageLoader.loadImage('./assets/images/panelActive.png');
     
-    this.panelSound = await audioLoader.loadSound('/assets/sounds/panel.ogg');
+    this.panelSound = await audioLoader.loadSound('./assets/sounds/panel.ogg');
 
     return this;
   }

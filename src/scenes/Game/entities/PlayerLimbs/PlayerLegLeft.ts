@@ -8,7 +8,7 @@ export default class PlayerLegLeft extends IEntity {
 
   async initialize(gameState: IGameState, x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
-      '/assets/images/playerLegLeft.png',
+      './assets/images/playerLegLeft.png',
     );
     this.offSet = {
       x: 0,
