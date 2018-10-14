@@ -76,7 +76,7 @@ export default class Walls extends IEntity {
           ~~(Math.random() * this.bumpSounds.length)
         ];
         this.bumpSound.currentTime = 0;
-        this.bumpSound.volume = 0.6;
+        this.bumpSound.volume = 0.4;
         this.bumpSound.play();
       }
     });

@@ -30,7 +30,6 @@ export default class MenuWalls extends IEntity {
 
     const WALL_SIZE = 50;
 
-
     this.physicsBody = Bodies.rectangle(
       0,
       GameSettings.height / 2,
@@ -79,7 +78,7 @@ export default class MenuWalls extends IEntity {
           ~~(Math.random() * this.bumpSounds.length)
         ];
         this.bumpSound.currentTime = 0;
-        this.bumpSound.volume = 0.6;
+        this.bumpSound.volume = 0.4;
         this.bumpSound.play();
       }
     });
