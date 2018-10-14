@@ -13,11 +13,11 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Control panel interaction~~
 * ~~Choosing control panels to activate~~
 * ~~Random flinging~~
-* Timer
-* Difficulty progression (spawn harder obstacles, more frequent/intense flings)
-* Game over & screen flash
-* Menu
-* Setting box spawn counts (x many smalls, x many meds, etc)
+* ~~Timer~~
+* ~~Difficulty progression (spawn harder obstacles, more frequent/intense flings)~~
+* ~~Game over & screen flash~~
+* ~~Menu~~
+* ~~Setting box spawn counts (x many smalls, x many meds, etc)~~
 
 ### Optional
 
@@ -43,7 +43,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Planet under attack~~
 * ~~Planet exploded~~
 * ~~Player head expressions (charging fart, shitstorm)~~
-* Logo
+* ~~Logo~~
 
 ### Optional
 

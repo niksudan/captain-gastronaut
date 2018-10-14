@@ -83,13 +83,13 @@ export default class StartGame implements IScene {
   render(context: CanvasRenderingContext2D) {
     const SIZE = 0.1;
     const ROTATION_SIZE = 0.2;
+    context.drawImage(this.stars, 0, 0);
 
     for (let entity of this.entities) {
       entity.render(context);
     }
 
     context.save();
-    context.drawImage(this.stars, 0, 0);
     context.translate(GameSettings.width / 2, GameSettings.height / 2);
     context.rotate(Math.cos(this.pulse / 5) * ROTATION_SIZE);
     context.scale(

@@ -37,6 +37,7 @@ export default class Game implements IScene {
   warningSound: HTMLAudioElement;
   gameOverSound: HTMLAudioElement;
   player: Player;
+  gameStartSound: HTMLAudioElement;
 
   constructor() {
     this.entities = [];
@@ -154,11 +155,15 @@ export default class Game implements IScene {
     this.gameOverSound = await this.soundLoader.loadSound(
       './assets/sounds/gameover.ogg',
     );
+    this.gameStartSound = await this.soundLoader.loadSound(
+      './assets/sounds/gamestart.ogg',
+    );
 
     this.player = await new Player().initialize(gameState, 0, 0);
     gameState.focusedEntity = this.player;
     await Promise.all([this.entities.push(this.player)]);
     this.timer = await new Timer().initialize();
+    this.gameStartSound.play();
     return true;
   }
 
