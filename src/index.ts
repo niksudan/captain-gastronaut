@@ -24,6 +24,7 @@ const gameState = {
   collisionSubscriptions: {},
   screenShakeTimer: 0,
   shakeForce: 0,
+  score: 0,
   shakeScreen(shakeForce: number) {
     gameState.screenShakeTimer = 5;
     gameState.shakeForce = shakeForce;
@@ -56,7 +57,7 @@ const gameState = {
     gameState.focusedEntity = null;
     gameState.collisionSubscriptions = {};
     gameState.currentScene = scene;
-  
+
     Events.on(engine, 'collisionStart', function(event) {
       for (let pair of event.pairs) {
         const subscriptions = [

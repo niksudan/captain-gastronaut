@@ -217,7 +217,7 @@ export default class Game implements IScene {
     }
 
     if (this.dangerTime <= 0) {
-      // TODO: Blow up the world lol
+      gameState.score = this.score;
       await gameState.setScene(new EndGame());
     }
   }
