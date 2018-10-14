@@ -1,11 +1,11 @@
 import { Engine, Events, World } from 'matter-js';
-import { flatMap } from 'lodash';
 import GameSettings from './data/GameSettings';
 import { IScene } from './definitions/IScene';
 import { IGameState } from './definitions/IGameState';
 
 import Game from './scenes/Game';
 import IEntity from './definitions/IEntity';
+import SoundLoader from './loaders/SoundLoader';
 
 const canvas = document.createElement('canvas');
 canvas.width = GameSettings.width;
@@ -88,6 +88,10 @@ document.addEventListener('keydown', (event) => {
 const context = canvas.getContext('2d');
 
 const main = async () => {
+  const music = await new SoundLoader().loadSound('./assets/sounds/music.ogg');
+  music.loop = true;
+  music.play();
+
   await gameState.setScene(new Game());
 
   const handleCanvasResize = () => {
