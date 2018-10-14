@@ -193,7 +193,6 @@ export default class Player extends IEntity {
         this.physicsBody,
         Math.sin(this.buildUp * 100) / 100,
       );
-
     } else {
       if (this.chargeSound) {
         this.chargeSound.pause();
@@ -203,9 +202,8 @@ export default class Player extends IEntity {
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
         if (this.buildUp > 0.1) {
-
           // wheeeee
-          const force = Math.min(1, this.buildUp;
+          const force = Math.min(1, this.buildUp);
           Body.applyForce(this.physicsBody, this.physicsBody.position, {
             x: Math.cos(angle) * (SPEED * force),
             y: Math.sin(angle) * (SPEED * force),
