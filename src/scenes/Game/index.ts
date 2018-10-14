@@ -14,7 +14,7 @@ import Panel from './entities/Panel';
 const MAX_OBSTACLE_COUNT = 10;
 
 const randomValue = (max: number, min: number) => {
-  return (Math.random() * (max - min)) + min;
+  return Math.random() * (max - min) + min;
 };
 
 export default class Game implements IScene {
@@ -38,16 +38,28 @@ export default class Game implements IScene {
 
     this.panels = [
       // Top Left
-      await new Panel(-GameSettings.worldWidth / 2 + PANEL_OFFSET, -GameSettings.worldHeight / 2 + PANEL_OFFSET).initialize(),
+      await new Panel(
+        -GameSettings.worldWidth / 2 + PANEL_OFFSET,
+        -GameSettings.worldHeight / 2 + PANEL_OFFSET,
+      ).initialize(),
 
       // Top Right
-      await new Panel(GameSettings.worldWidth / 2 - PANEL_OFFSET, -GameSettings.worldHeight / 2 + PANEL_OFFSET).initialize(),
+      await new Panel(
+        GameSettings.worldWidth / 2 - PANEL_OFFSET,
+        -GameSettings.worldHeight / 2 + PANEL_OFFSET,
+      ).initialize(),
 
       // Bottom Left
-      await new Panel(-GameSettings.worldWidth / 2 + PANEL_OFFSET, GameSettings.worldHeight / 2 - PANEL_OFFSET).initialize(),
+      await new Panel(
+        -GameSettings.worldWidth / 2 + PANEL_OFFSET,
+        GameSettings.worldHeight / 2 - PANEL_OFFSET,
+      ).initialize(),
 
       // Bottom right
-      await new Panel(GameSettings.worldWidth / 2 - PANEL_OFFSET, GameSettings.worldHeight / 2 - PANEL_OFFSET).initialize(),
+      await new Panel(
+        GameSettings.worldWidth / 2 - PANEL_OFFSET,
+        GameSettings.worldHeight / 2 - PANEL_OFFSET,
+      ).initialize(),
     ];
 
     this.activatePanel();
@@ -55,7 +67,7 @@ export default class Game implements IScene {
 
   public activatePanel() {
     const activePanel = ~~(Math.random() * this.panels.length);
-    for (let i: number = 0; i < this.panels.length; i ++) {
+    for (let i: number = 0; i < this.panels.length; i++) {
       this.panels[i].toggleActive(i === activePanel);
     }
   }
@@ -145,8 +157,8 @@ export default class Game implements IScene {
   render(context: CanvasRenderingContext2D) {
     context.drawImage(
       this.background,
-      -(GameSettings.worldWidth / 2),
-      -(GameSettings.worldHeight / 2),
+      -(GameSettings.worldWidth / 2) - 128,
+      -(GameSettings.worldHeight / 2) - 64,
     );
     for (let panel of this.panels) {
       panel.render(context);
