@@ -27,7 +27,7 @@ export default class Game implements IScene {
 
   private async createObstacle(gameState: IGameState) {
     const numberWithinRange = (min: number, max: number) => {
-      return Math.random() * (max - 1) + min;
+      return Math.random() * (max - min) + min;
     };
 
     const x = numberWithinRange(
