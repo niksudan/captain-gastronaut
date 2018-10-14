@@ -27,12 +27,14 @@ export default class Game implements IScene {
   background: HTMLImageElement;
   flingTimer: number = randomValue(50, 10);
   flingSound: HTMLAudioElement;
+  score: number;
 
   constructor() {
     this.entities = [];
     this.entitiesToDestroy = [];
     this.particlesToAdd = [];
     this.panels = [];
+    this.score = 0;
   }
 
   private async createPanels() {
@@ -69,6 +71,7 @@ export default class Game implements IScene {
 
   public activatePanel() {
     const activePanel = ~~(Math.random() * this.panels.length);
+    this.score += 1;
     for (let i: number = 0; i < this.panels.length; i++) {
       this.panels[i].toggleActive(i === activePanel);
     }
@@ -119,7 +122,7 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
-    const FLING_FORCE = 0.5;
+    
 
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
@@ -140,11 +143,15 @@ export default class Game implements IScene {
 
     // Add some fling if time runs out
     if (this.flingTimer < 0) {
+      const FLING_FORCE = this.score / 20;
+
       const FLING_DIRECTION = Math.random() * 360;
       this.flingTimer = randomValue(50, 20);
       fling.x = Math.cos(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
       fling.y = Math.sin(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
-      gameState.shakeScreen(50);
+
+      gameState.shakeScreen(this.score * 5);
+
       this.flingSound.play();
     }
 
