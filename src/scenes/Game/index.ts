@@ -224,6 +224,7 @@ export default class Game implements IScene {
     if (this.dangerTime <= 0) {
       this.warningSound.pause();
       this.gameOverSound.play();
+      gameState.score = this.score;
       await gameState.setScene(new EndGame());
     }
   }
