@@ -3,9 +3,9 @@ import { World, Body, Bodies, Sleeping } from 'matter-js';
 import { IGameState } from '../../../definitions/IGameState';
 
 const OBSTACLE_IMAGES = [
-  'obstacleBig.png',
-  'obstacleMedium.png',
   'obstacleSmall.png',
+  'obstacleMedium.png',
+  'obstacleBig.png',
 ];
 
 export default class Obstacle extends IEntity {
@@ -24,9 +24,8 @@ export default class Obstacle extends IEntity {
     ];
   }
 
-  async initialize(gameState: IGameState, x: number, y: number) {
-    const imageSelected =
-      OBSTACLE_IMAGES[~~(Math.random() * OBSTACLE_IMAGES.length)];
+  async initialize(gameState: IGameState, x: number, y: number, type: number) {
+    const imageSelected = OBSTACLE_IMAGES[type];
 
     this.image = await this.imageLoader.loadImage(
       `./assets/images/${imageSelected}`,
