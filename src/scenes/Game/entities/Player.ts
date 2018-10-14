@@ -29,6 +29,7 @@ interface ISoundData {
 }
 
 let fartParticles = [];
+let pooParticles = [];
 
 export default class Player extends IEntity {
   physicsBody: Body;
@@ -50,6 +51,11 @@ export default class Player extends IEntity {
       await this.imageLoader.loadImage('/assets/images/fart2.png'),
       await this.imageLoader.loadImage('/assets/images/fart3.png'),
       await this.imageLoader.loadImage('/assets/images/fart4.png'),
+    ]);
+    pooParticles = await Promise.all([
+      await this.imageLoader.loadImage('/assets/images/shit1.png'),
+      await this.imageLoader.loadImage('/assets/images/shit2.png'),
+      await this.imageLoader.loadImage('/assets/images/shit3.png'),
     ]);
   }
 
@@ -206,9 +212,14 @@ export default class Player extends IEntity {
           });
 
           // puff daddies
-          const fartCount = Math.max(2, Math.round(force * 5));
+          const fartCount = Math.max(4, Math.round(force * 10));
           for (let i: number = 0; i < fartCount; i++) {
             this.addParticle(gameState, x, y, fartParticles);
+          }
+          if (force > 0.8 && Math.random() > 0.5) {
+            for (let i: number = 0; i < randomItem([2, 2, 3]); i++) {
+              this.addParticle(gameState, x, y, pooParticles);
+            }
           }
         }
 
