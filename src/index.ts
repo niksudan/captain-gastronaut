@@ -89,9 +89,11 @@ document.addEventListener('keydown', (event) => {
 const context = canvas.getContext('2d');
 
 const main = async () => {
-  const music = await new SoundLoader().loadSound('./assets/sounds/music.ogg');
-  music.loop = true;
-  music.play();
+  gameState.music = await new SoundLoader().loadSound(
+    './assets/sounds/music.ogg',
+  );
+  gameState.music.loop = true;
+  gameState.music.play();
 
   await gameState.setScene(new StartGame());
 

@@ -26,6 +26,7 @@ export default class IntroScreen implements IScene {
       this.canStart = true;
     }, 3000);
     this.introSound.play();
+    gameState.music.volume = 0.5;
     return true;
   }
 
@@ -39,6 +40,7 @@ export default class IntroScreen implements IScene {
     ) {
       await gameState.setScene(new Game());
       this.introSound.pause();
+      gameState.music.volume = 1;
     }
   }
 
@@ -50,7 +52,7 @@ export default class IntroScreen implements IScene {
     const w = GameSettings.width / 2;
 
     context.fillText(
-      "WELL DONE... NOW YOU'VE DONE IT",
+      "WELL DONE... NOW YOU'VE DONE IT!",
       w,
       GameSettings.height * 0.2,
     );
