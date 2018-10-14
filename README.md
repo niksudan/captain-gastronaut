@@ -63,4 +63,4 @@ We're doomed!
 Only you can save us now, Captain Gastronaut!
 Activate the control panels on your Space Base.
 They will help us survive, I think?
-May the beans be with you.
+May the beans be with you. Always.
