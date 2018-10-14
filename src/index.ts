@@ -72,14 +72,15 @@ const main = async () => {
     }
 
     const handleCanvasResize = () => {
+      const parent = canvas.parentElement;
       const heightRatio = GameSettings.height / GameSettings.width;
 
-      let canvasWidth = window.innerWidth;
-      let canvasHeight = window.innerWidth * heightRatio;
+      let canvasWidth = parent.clientWidth;
+      let canvasHeight = parent.clientWidth * heightRatio;
 
-      if (canvasHeight > window.innerHeight) {
-        canvasWidth = window.innerHeight / heightRatio;
-        canvasHeight = window.innerHeight;
+      if (canvasHeight > parent.clientHeight) {
+        canvasWidth = parent.clientHeight / heightRatio;
+        canvasHeight = parent.clientHeight;
       }
 
       canvas.style.width = `${canvasWidth}px`;
