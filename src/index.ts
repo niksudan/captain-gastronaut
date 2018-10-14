@@ -6,6 +6,7 @@ import { IGameState } from './definitions/IGameState';
 import Game from './scenes/Game';
 import IEntity from './definitions/IEntity';
 import SoundLoader from './loaders/SoundLoader';
+import StartGame from './scenes/StartGame';
 
 const canvas = document.createElement('canvas');
 canvas.width = GameSettings.width;
@@ -92,7 +93,7 @@ const main = async () => {
   music.loop = true;
   music.play();
 
-  await gameState.setScene(new Game());
+  await gameState.setScene(new StartGame());
 
   const handleCanvasResize = () => {
     const parent = canvas.parentElement;
