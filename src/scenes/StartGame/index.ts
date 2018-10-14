@@ -18,6 +18,7 @@ export default class StartGame implements IScene {
   logo: HTMLImageElement;
   player: IEntity;
   startGame: boolean = false;
+  pulse: number = 0;
 
   async initialize(gameState: IGameState) {
     const player = await new Player().initialize(gameState, 100, GameSettings.height / 2);
@@ -50,20 +51,29 @@ export default class StartGame implements IScene {
     for (let entity of this.entities) {
       entity.update(world, gameState);
     }
-
+    this.pulse += 0.05;
     if (this.startGame) {
       await gameState.setScene(new Game());
     }
   }
 
   render(context: CanvasRenderingContext2D) {
-    context.drawImage(
-      this.logo,
-      GameSettings.width / 2 - this.logo.width / 2,
-      GameSettings.height / 2 - this.logo.height / 2
-    );
+    const SIZE = 0.1;
+    const ROTATION_SIZE = 0.2;
+
     for (let entity of this.entities) {
       entity.render(context);
     }
+
+    context.save();
+    context.translate(GameSettings.width / 2, GameSettings.height / 2);
+    context.rotate(Math.cos(this.pulse / 5) * ROTATION_SIZE);
+    context.scale(1 + Math.sin(this.pulse) * SIZE, 1 + Math.sin(this.pulse) * SIZE);
+    context.drawImage(
+      this.logo,
+      -this.logo.width / 2,
+      -this.logo.height / 2
+    );
+    context.restore();
   }
 }
