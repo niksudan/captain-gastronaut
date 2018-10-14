@@ -32,6 +32,8 @@ export default class Game implements IScene {
   invaderBob: number = 0;
   timer: Timer;
   dangerTime: number;
+  soundLoader: SoundLoader = new SoundLoader();
+  warningSound: HTMLAudioElement;
 
   constructor() {
     this.entities = [];
@@ -140,8 +142,11 @@ export default class Game implements IScene {
       await this.imageLoader.loadImage('./assets/images/planetDead.png'),
     ];
 
-    this.flingSound = await new SoundLoader().loadSound(
+    this.flingSound = await this.soundLoader.loadSound(
       './assets/sounds/fling.ogg',
+    );
+    this.warningSound = await this.soundLoader.loadSound(
+      './assets/sounds/timer.ogg',
     );
 
     const player = await new Player().initialize(gameState, 0, 0);
@@ -152,7 +157,7 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
-    const DANGER_SPEED = 0.001;
+    const DANGER_SPEED = 0.00075;
 
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
@@ -201,6 +206,14 @@ export default class Game implements IScene {
     // invader bob's a nice guy
     // this variable has nothing to do with him
     this.invaderBob += 1;
+
+    if (this.dangerTime <= 0.25) {
+      this.warningSound.loop = true;
+      this.warningSound.play();
+    } else {
+      this.warningSound.currentTime = 0;
+      this.warningSound.pause();
+    }
 
     if (this.dangerTime <= 0) {
       // TODO: Blow up the world lol
