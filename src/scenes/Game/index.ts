@@ -9,6 +9,7 @@ import Walls from './entities/Walls';
 import GameSettings from '../../data/GameSettings';
 import { World } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
+import Panel from './entities/Panel';
 
 const MAX_OBSTACLE_COUNT = 10;
 
@@ -17,12 +18,41 @@ export default class Game implements IScene {
   entitiesToDestroy: string[];
   particlesToAdd: IEntity[];
   obstacles: IEntity[] = [];
+  panels: Panel[];
   background: HTMLImageElement;
 
   constructor() {
     this.entities = [];
     this.entitiesToDestroy = [];
     this.particlesToAdd = [];
+    this.panels = [];
+  }
+
+  private async createPanels() {
+    const PANEL_OFFSET = 200;
+
+    this.panels = [
+      // Top Left
+      await new Panel(-GameSettings.worldWidth / 2 + PANEL_OFFSET, -GameSettings.worldHeight / 2 + PANEL_OFFSET).initialize(),
+
+      // Top Right
+      await new Panel(GameSettings.worldWidth / 2 - PANEL_OFFSET, -GameSettings.worldHeight / 2 + PANEL_OFFSET).initialize(),
+
+      // Bottom Left
+      await new Panel(-GameSettings.worldWidth / 2 + PANEL_OFFSET, GameSettings.worldHeight / 2 - PANEL_OFFSET).initialize(),
+
+      // Bottom right
+      await new Panel(GameSettings.worldWidth / 2 - PANEL_OFFSET, GameSettings.worldHeight / 2 - PANEL_OFFSET).initialize(),
+    ];
+
+    this.activatePanel();
+  }
+
+  public activatePanel() {
+    const activePanel = ~~(Math.random() * this.panels.length);
+    for (let i: number = 0; i < this.panels.length; i ++) {
+      this.panels[i].toggleActive(i === activePanel);
+    }
   }
 
   private async createObstacle(gameState: IGameState) {
@@ -54,6 +84,7 @@ export default class Game implements IScene {
   }
 
   async initialize(gameState: IGameState): Promise<boolean> {
+    await this.createPanels();
     await this.createObstacles(gameState);
     this.background = await new ImageLoader().loadImage(
       '/assets/images/background.png',
@@ -80,6 +111,9 @@ export default class Game implements IScene {
     for (let entity of this.entities) {
       entity.update(world, gameState);
     }
+    for (let panel of this.panels) {
+      panel.update(gameState);
+    }
   }
 
   render(context: CanvasRenderingContext2D) {
@@ -88,6 +122,9 @@ export default class Game implements IScene {
       -(GameSettings.worldWidth / 2),
       -(GameSettings.worldHeight / 2),
     );
+    for (let panel of this.panels) {
+      panel.render(context);
+    }
     for (let entity of this.entities) {
       entity.render(context);
     }
