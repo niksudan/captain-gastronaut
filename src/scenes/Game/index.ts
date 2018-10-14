@@ -35,6 +35,7 @@ export default class Game implements IScene {
   dangerTime: number;
   soundLoader: SoundLoader = new SoundLoader();
   warningSound: HTMLAudioElement;
+  gameOverSound: HTMLAudioElement;
 
   constructor() {
     this.entities = [];
@@ -149,6 +150,9 @@ export default class Game implements IScene {
     this.warningSound = await this.soundLoader.loadSound(
       './assets/sounds/timer.ogg',
     );
+    this.gameOverSound = await this.soundLoader.loadSound(
+      './assets/sounds/gameover.ogg',
+    );
 
     const player = await new Player().initialize(gameState, 0, 0);
     gameState.focusedEntity = player;
@@ -216,8 +220,10 @@ export default class Game implements IScene {
       this.warningSound.pause();
     }
 
+    // Blow up the world lol
     if (this.dangerTime <= 0) {
-      // TODO: Blow up the world lol
+      this.warningSound.pause();
+      this.gameOverSound.play();
       await gameState.setScene(new EndGame());
     }
   }
