@@ -231,7 +231,7 @@ export default class Player extends IEntity {
 
           // trigger the fart trail
           this.isFarting = true;
-          const fartTimeout = Math.max(200, Math.round(force * 500));
+          const fartTimeout = Math.max(200, Math.round(force * 750));
           window.setTimeout(() => {
             this.isFarting = false;
           }, fartTimeout);
