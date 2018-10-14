@@ -7,6 +7,62 @@ import Game from './scenes/Game';
 import IEntity from './definitions/IEntity';
 import SoundLoader from './loaders/SoundLoader';
 import StartGame from './scenes/StartGame';
+import ImageLoader from './loaders/ImageLoader';
+
+const PRELOAD_IMAGES = [
+  'arrow',
+  'background',
+  'button',
+  'dangerometer',
+  'fart1',
+  'fart2',
+  'fart3',
+  'fart4',
+  'invaders',
+  'logo',
+  'obstacleBig',
+  'obstacleMedium',
+  'obstacleSmall',
+  'panel',
+  'panelActive',
+  'planet',
+  'planetDead',
+  'playerArmLeft',
+  'playerArmRight',
+  'playerBody',
+  'playerHead',
+  'playerHead2',
+  'playerHead3',
+  'playerHeadLeft',
+  'playerHeadRight',
+  'playerLegLeft',
+  'playerLegRight',
+  'shit1',
+  'shit2',
+  'shit3',
+  'stars'
+];
+
+const PRELOAD_AUDIO = [
+  'bigfart1',
+  'bigfart2',
+  'bigfart3',
+  'bump1',
+  'bump2',
+  'bump3',
+  'charge1',
+  'charge2',
+  'charge3',
+  'epic',
+  'fart1',
+  'fart2',
+  'fling',
+  'gameover',
+  'intro',
+  'music',
+  'panel',
+  'timer'
+];
 
 const canvas = document.createElement('canvas');
 canvas.width = GameSettings.width;
@@ -89,7 +145,13 @@ document.addEventListener('keydown', (event) => {
 const context = canvas.getContext('2d');
 
 const main = async () => {
-  gameState.music = await new SoundLoader().loadSound(
+  const imageLoader = new ImageLoader();
+  const soundLoader = new SoundLoader();
+
+  await Promise.all(PRELOAD_IMAGES.map(async (image) => await imageLoader.loadImage(`./assets/images/${image}.png`)));
+  await Promise.all(PRELOAD_AUDIO.map(async (audio) => await soundLoader.loadSound(`./assets/sounds/${audio}.ogg`)));
+
+  gameState.music = await soundLoader.loadSound(
     './assets/sounds/music.ogg',
   );
   gameState.music.loop = true;
