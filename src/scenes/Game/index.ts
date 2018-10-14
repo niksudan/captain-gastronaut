@@ -48,7 +48,7 @@ export default class Game implements IScene {
     this.activatePanel();
   }
 
-  private activatePanel() {
+  public activatePanel() {
     const activePanel = ~~(Math.random() * this.panels.length);
     for (let i: number = 0; i < this.panels.length; i ++) {
       this.panels[i].toggleActive(i === activePanel);
