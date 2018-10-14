@@ -1,22 +1,27 @@
 import ImageLoader from "../../../loaders/ImageLoader";
 import { IGameState } from "../../../definitions/IGameState";
+import SoundLoader from "../../../loaders/SoundLoader";
 
 export default class Panel {
-  private imageLoader: ImageLoader = new ImageLoader();
   private isActive: boolean;
   private flashing: number = 0;
 
   imagePassive: HTMLImageElement;
   imageActive: HTMLImageElement;
+  panelSound: HTMLAudioElement;
 
   constructor(private x: number, private y: number) {
 
   }
 
   async initialize() {
-    this.imagePassive = await this.imageLoader.loadImage('/assets/images/panel.png');
-    this.imageActive = await this.imageLoader.loadImage('/assets/images/panelActive.png');
+    const imageLoader = new ImageLoader();
+    const audioLoader = new SoundLoader();
+    this.imagePassive = await imageLoader.loadImage('/assets/images/panel.png');
+    this.imageActive = await imageLoader.loadImage('/assets/images/panelActive.png');
     
+    this.panelSound = await audioLoader.loadSound('/assets/sounds/panel.ogg');
+
     return this;
   }
 
@@ -43,6 +48,7 @@ export default class Panel {
     );
 
     if (isNearFocused) {
+      this.panelSound.play();
       (gameState.currentScene as any).activatePanel();
     }
   }
