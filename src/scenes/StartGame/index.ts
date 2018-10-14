@@ -7,6 +7,8 @@ import { IScene } from "../../definitions/IScene";
 import Player from "../Game/entities/Player";
 import GameSettings from "../../data/GameSettings";
 import MenuWalls from "./entities/MenuWalls";
+import Game from "../Game";
+import Button from "./entities/Button";
 
 export default class StartGame implements IScene {
   entities: IEntity[] = [];
@@ -14,18 +16,25 @@ export default class StartGame implements IScene {
   particlesToAdd: IEntity[] = [];
   imageLoader: ImageLoader = new ImageLoader();
   logo: HTMLImageElement;
+  player: IEntity;
+  startGame: boolean = false;
 
   async initialize(gameState: IGameState) {
     const player = await new Player().initialize(gameState, 100, GameSettings.height / 2);
+    this.player = player;
     this.logo = await this.imageLoader.loadImage('./assets/images/logo.png');
+    const button = await new Button().initialize(gameState, GameSettings.width - 80, GameSettings.height / 2, () => {
+      this.startGame = true;
+    });
     this.entities = [
       player,
+      button,
       await new MenuWalls().initialize(gameState),
     ];
     return true;
   }
 
-  update(world: World, gameState: IGameState) {
+  async update(world: World, gameState: IGameState) {
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
       this.particlesToAdd = [];
@@ -39,6 +48,10 @@ export default class StartGame implements IScene {
     this.entitiesToDestroy = [];
     for (let entity of this.entities) {
       entity.update(world, gameState);
+    }
+
+    if (this.startGame) {
+      await gameState.setScene(new Game());
     }
   }
 
