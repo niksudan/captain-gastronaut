@@ -46,7 +46,10 @@ export default class Obstacle extends IEntity {
 
     Body.rotate(this.physicsBody, (Math.random() * 360) * (180 / Math.PI));
 
-    gameState.subscribeToEvent('obstacle', () => {
+    gameState.subscribeToEvent('obstacle', (gameState: IGameState) => {
+      if (!gameState.withinViewPort(this)) {
+        return;
+      }
       if (this.bumpSound !== null || this.bumpSound.paused) {
         this.bumpSound = this.bumpSounds[~~(Math.random() * this.bumpSounds.length)];
         this.bumpSound.play();

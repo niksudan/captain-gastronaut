@@ -10,8 +10,6 @@ import { World } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
 
 const MAX_OBSTACLE_COUNT = 10;
-const MAX_OBSTACLE_CREATION_WIDTH = GameSettings.width + 200;
-const MAX_OBSTACLE_CREATION_HEIGHT = GameSettings.height + 200;
 
 export default class Game implements IScene {
   entities: IEntity[];
@@ -32,12 +30,12 @@ export default class Game implements IScene {
     };
 
     const x = numberWithinRange(
-      -MAX_OBSTACLE_CREATION_WIDTH,
-      GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
+      -GameSettings.worldWidth / 2,
+      GameSettings.worldWidth / 2,
     );
     const y = numberWithinRange(
-      -MAX_OBSTACLE_CREATION_HEIGHT,
-      GameSettings.height + MAX_OBSTACLE_CREATION_HEIGHT,
+      -GameSettings.worldHeight / 2,
+      GameSettings.worldHeight / 2,
     );
 
     const obstacle = await new Obstacle().initialize(gameState, x, y);
@@ -56,7 +54,8 @@ export default class Game implements IScene {
     this.background = await new ImageLoader().loadImage(
       '/assets/images/background.png',
     );
-    const player = await new Player().initialize(gameState, 300, 200);
+    const player = await new Player().initialize(gameState, 0, 0);
+
     gameState.focusedEntity = player;
     await Promise.all([this.entities.push(player)]);
     return true;
