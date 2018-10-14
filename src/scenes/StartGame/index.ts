@@ -98,5 +98,14 @@ export default class StartGame implements IScene {
     );
     context.drawImage(this.logo, -this.logo.width / 2, -this.logo.height / 2);
     context.restore();
+
+    context.fillStyle = '#ffffff';
+    context.textAlign = 'center';
+    context.font = '36px GrapeSoda';
+    context.fillText(
+      'A GAME BY NIK, BEN, LINKRONNY AND SASCHA FOR #JUPIJAM',
+      GameSettings.width / 2,
+      GameSettings.height * 0.9,
+    );
   }
 }
