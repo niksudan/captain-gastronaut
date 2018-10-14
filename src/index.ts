@@ -155,7 +155,6 @@ const main = async () => {
     './assets/sounds/music.ogg',
   );
   gameState.music.loop = true;
-  gameState.music.play();
 
   await gameState.setScene(new StartGame());
 

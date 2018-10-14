@@ -54,6 +54,7 @@ export default class StartGame implements IScene {
       button,
       await new MenuWalls().initialize(gameState),
     ];
+    gameState.music.play();
     this.introSound.play();
     return true;
   }

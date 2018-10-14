@@ -31,7 +31,7 @@ export default class Obstacle extends IEntity {
       `./assets/images/${imageSelected}`,
     );
 
-    if ((Math.abs(x) + Math.abs(y)) < this.image.width * 2) {
+    if (Math.abs(x) + Math.abs(y) < this.image.width * 2) {
       x += this.image.width * 2;
     }
 
@@ -65,7 +65,7 @@ export default class Obstacle extends IEntity {
           ~~(Math.random() * this.bumpSounds.length)
         ];
         this.bumpSound.currentTime = 0;
-        this.bumpSound.volume = 0.6;
+        this.bumpSound.volume = 0.4;
         this.bumpSound.play();
       }
     });
