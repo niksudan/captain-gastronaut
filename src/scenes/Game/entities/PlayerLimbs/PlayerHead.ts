@@ -6,6 +6,8 @@ interface faces {
   PASSIVE: HTMLImageElement;
   CHARGING: HTMLImageElement;
   POOP: HTMLImageElement;
+  LEFT: HTMLImageElement;
+  RIGHT: HTMLImageElement;
 }
 
 export default class PlayerHead extends IEntity {
@@ -22,6 +24,12 @@ export default class PlayerHead extends IEntity {
         '/assets/images/playerHead2.png',
       ),
       POOP: await this.imageLoader.loadImage('/assets/images/playerHead3.png'),
+      LEFT: await this.imageLoader.loadImage(
+        '/assets/images/playerHeadLeft.png',
+      ),
+      RIGHT: await this.imageLoader.loadImage(
+        '/assets/images/playerHeadRight.png',
+      ),
     };
 
     this.image = this.faces['PASSIVE'];
@@ -48,7 +56,7 @@ export default class PlayerHead extends IEntity {
     return this;
   }
 
-  public setFace(name: 'PASSIVE' | 'CHARGING' | 'POOP') {
+  public setFace(name: 'PASSIVE' | 'CHARGING' | 'POOP' | 'LEFT' | 'RIGHT') {
     this.image = this.faces[name];
   }
 }

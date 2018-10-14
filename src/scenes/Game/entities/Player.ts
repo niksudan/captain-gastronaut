@@ -169,14 +169,6 @@ export default class Player extends IEntity {
     const BUILD_UP_SPEED = 0.008;
     const { x, y } = this.physicsBody.position;
 
-    if (gameState.keyPresses['ArrowLeft']) {
-      Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
-    }
-
-    if (gameState.keyPresses['ArrowRight']) {
-      Body.setAngularVelocity(this.physicsBody, ROTATION_SPEED);
-    }
-
     // time to fart
     if (gameState.keyPresses['ArrowUp']) {
       this.canFart = true;
@@ -251,6 +243,26 @@ export default class Player extends IEntity {
       // fart trail
       if (this.isFarting && Math.random() > 0.3) {
         this.addParticle(gameState, x, y, fartParticles);
+      }
+    }
+
+    const rotSpeed = Math.max(0, ROTATION_SPEED - this.buildUp / 20);
+
+    if (gameState.keyPresses['ArrowLeft']) {
+      if (rotSpeed > 0) {
+        Body.setAngularVelocity(this.physicsBody, -rotSpeed);
+      }
+      if (!this.isFarting && this.buildUp === 0) {
+        this.head.setFace('LEFT');
+      }
+    }
+
+    if (gameState.keyPresses['ArrowRight']) {
+      if (rotSpeed > 0) {
+        Body.setAngularVelocity(this.physicsBody, rotSpeed);
+      }
+      if (!this.isFarting && this.buildUp === 0) {
+        this.head.setFace('RIGHT');
       }
     }
   }
