@@ -12,8 +12,6 @@ import ImageLoader from '../../loaders/ImageLoader';
 import Panel from './entities/Panel';
 import SoundLoader from '../../loaders/SoundLoader';
 
-const MAX_OBSTACLE_COUNT = 10;
-
 const randomValue = (max: number, min: number) => {
   return Math.random() * (max - min) + min;
 };
@@ -22,7 +20,6 @@ export default class Game implements IScene {
   entities: IEntity[];
   entitiesToDestroy: string[];
   particlesToAdd: IEntity[];
-  obstacles: IEntity[] = [];
   panels: Panel[];
   background: HTMLImageElement;
   flingTimer: number = randomValue(50, 10);
@@ -77,7 +74,7 @@ export default class Game implements IScene {
     }
   }
 
-  private async createObstacle(gameState: IGameState) {
+  private async createObstacle(gameState: IGameState, type: number) {
     const numberWithinRange = (min: number, max: number) => {
       return Math.random() * (max - min) + min;
     };
@@ -91,21 +88,35 @@ export default class Game implements IScene {
       GameSettings.worldHeight / 2,
     );
 
-    const obstacle = await new Obstacle().initialize(gameState, x, y);
-    const walls = await new Walls().initialize(gameState);
+    const obstacle = await new Obstacle().initialize(gameState, x, y, type);
 
-    this.entities.push(walls);
     this.entities.push(obstacle);
-    this.obstacles.push(obstacle);
   }
 
   private async createObstacles(gameState: IGameState) {
-    for (let i: number = this.obstacles.length; i < MAX_OBSTACLE_COUNT; i++) {
-      await this.createObstacle(gameState);
+    // smol
+    for (let i: number = 0; i < 12; i++) {
+      await this.createObstacle(gameState, 0);
+    }
+
+    // average joe
+    for (let i: number = 0; i < 6; i++) {
+      await this.createObstacle(gameState, 1);
+    }
+
+    // bigboye
+    for (let i: number = 0; i < 3; i++) {
+      await this.createObstacle(gameState, 2);
     }
   }
 
+  private async createWalls(gameState: IGameState) {
+    const walls = await new Walls().initialize(gameState);
+    this.entities.push(walls);
+  }
+
   async initialize(gameState: IGameState): Promise<boolean> {
+    await this.createWalls(gameState);
     await this.createPanels();
     await this.createObstacles(gameState);
     this.background = await new ImageLoader().loadImage(
