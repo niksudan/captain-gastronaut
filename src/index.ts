@@ -22,6 +22,10 @@ const gameState = {
   focusedEntity: null,
   keyPresses: {},
   collisionSubscriptions: {},
+  screenShakeTimer: 0,
+  shakeScreen() {
+    gameState.screenShakeTimer = 5;
+  },
   subscribeToEvent(name: string, subscription: () => void) {
     if (!gameState.collisionSubscriptions[name]) {
       gameState.collisionSubscriptions[name] = [];
@@ -113,6 +117,11 @@ const main = async () => {
         -position.x + GameSettings.width / 2,
         -position.y + GameSettings.height / 2,
       );
+    }
+
+    if (gameState.screenShakeTimer > 0) {
+      gameState.screenShakeTimer -= 0.1;
+      context.translate(Math.sin(gameState.screenShakeTimer * 50) * 10, 0);
     }
 
     gameState.currentScene.update(engine.world, gameState);
