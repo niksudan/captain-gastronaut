@@ -121,7 +121,7 @@ const main = async () => {
 
     if (gameState.screenShakeTimer > 0) {
       gameState.screenShakeTimer -= 0.1;
-      context.translate(Math.sin(gameState.screenShakeTimer * 50) * 20, 0);
+      context.translate(Math.sin(gameState.screenShakeTimer * 50) * 10, 0);
     }
 
     gameState.currentScene.update(engine.world, gameState);
