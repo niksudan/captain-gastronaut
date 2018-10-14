@@ -8,7 +8,7 @@ export default class PlayerLegRight extends IEntity {
 
   async initialize(gameState: IGameState, x: number, y: number) {
     this.image = await this.imageLoader.loadImage(
-      '/assets/images/playerLegRight.png',
+      './assets/images/playerLegRight.png',
     );
     this.offSet = {
       x: 0,
@@ -25,7 +25,7 @@ export default class PlayerLegRight extends IEntity {
           category: 2,
           mask: 2,
         } as any,
-      }
+      },
     );
     this.physicsBody.force.y = 0;
 
