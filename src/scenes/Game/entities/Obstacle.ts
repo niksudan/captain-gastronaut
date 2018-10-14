@@ -31,6 +31,10 @@ export default class Obstacle extends IEntity {
       `./assets/images/${imageSelected}`,
     );
 
+    if ((Math.abs(x) + Math.abs(y)) < this.image.width * 2) {
+      x += this.image.width * 2;
+    }
+
     await this.initializeSounds();
 
     this.physicsBody = Bodies.rectangle(

@@ -28,10 +28,13 @@ export default class MenuWalls extends IEntity {
       isStatic: true,
     };
 
+    const WALL_SIZE = 50;
+
+
     this.physicsBody = Bodies.rectangle(
       0,
       GameSettings.height / 2,
-      10,
+      WALL_SIZE,
       GameSettings.height,
       wallOptions,
     );
@@ -44,7 +47,7 @@ export default class MenuWalls extends IEntity {
         Bodies.rectangle(
           GameSettings.width,
           GameSettings.height / 2,
-          10,
+          WALL_SIZE,
           GameSettings.height,
           wallOptions,
         ),
@@ -53,7 +56,7 @@ export default class MenuWalls extends IEntity {
           GameSettings.width / 2,
           0,
           GameSettings.width,
-          10,
+          WALL_SIZE,
           wallOptions,
         ),
         // Down
@@ -61,7 +64,7 @@ export default class MenuWalls extends IEntity {
           GameSettings.width / 2,
           GameSettings.height,
           GameSettings.width,
-          10,
+          WALL_SIZE,
           wallOptions,
         ),
       ],
