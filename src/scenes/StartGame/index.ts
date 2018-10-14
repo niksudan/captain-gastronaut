@@ -23,7 +23,7 @@ export default class StartGame implements IScene {
     const player = await new Player().initialize(gameState, 100, GameSettings.height / 2);
     this.player = player;
     this.logo = await this.imageLoader.loadImage('./assets/images/logo.png');
-    const button = await new Button().initialize(gameState, GameSettings.width - 80, GameSettings.height / 2, () => {
+    const button = await new Button().initialize(gameState, GameSettings.width - 66, GameSettings.height / 2, () => {
       this.startGame = true;
     });
     this.entities = [
