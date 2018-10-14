@@ -20,12 +20,13 @@ export default class EndGame implements IScene {
     this.invaders = await this.imageLoader.loadImage(
       './assets/images/invaders.png',
     );
+    gameState.shakeScreen(20);
     return true;
   }
 
   update(world: World, gameState: IGameState) {
     if (this.flash > 0) {
-      this.flash -= 0.1;
+      this.flash -= 0.05;
     }
     this.invaderBob += 1;
   }
@@ -43,8 +44,10 @@ export default class EndGame implements IScene {
       GameSettings.height / 2 - this.invaders.height / 2 + Math.sin(this.invaderBob / 40) * 10,
     );
     if (this.flash > 0) {
+      context.globalAlpha = this.flash;
       context.fillStyle = '#ffffff';
       context.fillRect(0, 0, GameSettings.width, GameSettings.height);
+      context.globalAlpha = 1;
     }
     context.restore();
   }
