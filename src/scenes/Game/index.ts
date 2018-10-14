@@ -11,6 +11,7 @@ import { World, Body } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
 import Panel from './entities/Panel';
 import SoundLoader from '../../loaders/SoundLoader';
+import Timer from './entities/Timer';
 
 const MAX_OBSTACLE_COUNT = 10;
 
@@ -28,6 +29,8 @@ export default class Game implements IScene {
   flingTimer: number = randomValue(50, 10);
   flingSound: HTMLAudioElement;
   score: number;
+  timer: Timer;
+  dangerTime: number;
 
   constructor() {
     this.entities = [];
@@ -35,6 +38,7 @@ export default class Game implements IScene {
     this.particlesToAdd = [];
     this.panels = [];
     this.score = 0;
+    this.dangerTime = 1;
   }
 
   private async createPanels() {
@@ -72,6 +76,7 @@ export default class Game implements IScene {
   public activatePanel() {
     const activePanel = ~~(Math.random() * this.panels.length);
     this.score += 1;
+    this.dangerTime = 1;
     for (let i: number = 0; i < this.panels.length; i++) {
       this.panels[i].toggleActive(i === activePanel);
     }
@@ -118,11 +123,12 @@ export default class Game implements IScene {
 
     gameState.focusedEntity = player;
     await Promise.all([this.entities.push(player)]);
+    this.timer = await new Timer().initialize();
     return true;
   }
 
   update(world: World, gameState: IGameState) {
-    
+    const DANGER_SPEED = 0.001;
 
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
@@ -136,6 +142,7 @@ export default class Game implements IScene {
     }
     this.entitiesToDestroy = [];
     this.flingTimer -= 0.1;
+    this.dangerTime -= DANGER_SPEED;
     const fling = {
       x: 0,
       y: 0,
@@ -166,6 +173,10 @@ export default class Game implements IScene {
     for (let panel of this.panels) {
       panel.update(gameState);
     }
+
+    if (this.dangerTime <= 0) {
+      // TODO: Blow up the world lol
+    }
   }
 
   render(context: CanvasRenderingContext2D) {
@@ -180,5 +191,6 @@ export default class Game implements IScene {
     for (let entity of this.entities) {
       entity.render(context);
     }
+    this.timer.render(context, this.dangerTime);
   }
 }
