@@ -9,8 +9,6 @@ import GameSettings from '../../data/GameSettings';
 import { World } from 'matter-js';
 
 const MAX_OBSTACLE_COUNT = 10;
-const MAX_OBSTACLE_CREATION_WIDTH = GameSettings.width + 200;
-const MAX_OBSTACLE_CREATION_HEIGHT = GameSettings.height + 200;
 
 export default class Game implements IScene {
   entities: IEntity[];
@@ -30,12 +28,12 @@ export default class Game implements IScene {
     };
 
     const x = numberWithinRange(
-      -MAX_OBSTACLE_CREATION_WIDTH,
-      GameSettings.width + MAX_OBSTACLE_CREATION_WIDTH,
+      -GameSettings.worldWidth / 2,
+      GameSettings.worldWidth / 2,
     );
     const y = numberWithinRange(
-      -MAX_OBSTACLE_CREATION_HEIGHT,
-      GameSettings.height + MAX_OBSTACLE_CREATION_HEIGHT,
+      -GameSettings.worldHeight / 2,
+      GameSettings.worldHeight / 2,
     );
 
     const obstacle = await new Obstacle().initialize(gameState, x, y);
@@ -51,7 +49,7 @@ export default class Game implements IScene {
 
   async initialize(gameState: IGameState): Promise<boolean> {
     await this.createObstacles(gameState);
-    const player = await new Player().initialize(gameState, 300, 200);
+    const player = await new Player().initialize(gameState, 0, 0);
 
     gameState.focusedEntity = player;
 

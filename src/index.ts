@@ -5,6 +5,7 @@ import { IScene } from './definitions/IScene';
 import { IGameState } from './definitions/IGameState';
 
 import Game from './scenes/Game';
+import IEntity from './definitions/IEntity';
 
 const canvas = document.createElement('canvas');
 canvas.width = GameSettings.width;
@@ -28,6 +29,20 @@ const gameState = {
 
     gameState.collisionSubscriptions[name].push(subscription);
   },
+  withinViewPort(entity: IEntity): boolean {
+    if (gameState.focusedEntity === null) {
+      return false;
+    }
+    const focusedPosition = gameState.focusedEntity.physicsBody.position;
+    const entityPosition = entity.physicsBody.position;
+
+    return (
+      entityPosition.x > focusedPosition.x - GameSettings.width &&
+      entityPosition.x < focusedPosition.x + GameSettings.width &&
+      entityPosition.y > focusedPosition.y - GameSettings.height &&
+      entityPosition.y < focusedPosition.y + GameSettings.height
+    );
+  }
 } as IGameState;
 
 document.addEventListener('keyup', (event) => {
@@ -52,7 +67,7 @@ const SetScene = (scene: IScene) => {
         ...(gameState.collisionSubscriptions[pair.bodyB.label] || []),
       ];
 
-      subscriptions.map((subscription) => subscription());
+      subscriptions.map((subscription) => subscription(gameState));
     }
   });
 };

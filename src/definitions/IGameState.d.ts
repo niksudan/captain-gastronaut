@@ -5,6 +5,7 @@ interface IGameState {
     currentScene: IScene;
     focusedEntity: IEntity;
     keyPresses: {[key: string]: boolean};
-    collisionSubscriptions: {[key: string]: Array<() => void>}
-    subscribeToEvent(name: string, subscription: () => void);
+    collisionSubscriptions: {[key: string]: Array<(gameState: IGameState) => void>}
+    subscribeToEvent(name: string, subscription: (gameState: IGameState) => void);
+    withinViewPort(entity: IEntity): boolean;
 }
