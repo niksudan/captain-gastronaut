@@ -8,6 +8,7 @@ interface IGameState {
     collisionSubscriptions: {[key: string]: Array<(gameState: IGameState) => void>}
     subscribeToEvent(name: string, subscription: (gameState: IGameState) => void);
     withinViewPort(entity: IEntity): boolean;
-    shakeScreen();
+    shakeScreen(shakeForce: number);
+    shakeForce: number;
     screenShakeTimer: number;
 }

@@ -144,7 +144,7 @@ export default class Game implements IScene {
       this.flingTimer = randomValue(50, 20);
       fling.x = Math.cos(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
       fling.y = Math.sin(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
-      gameState.shakeScreen();
+      gameState.shakeScreen(50);
       this.flingSound.play();
     }
 
