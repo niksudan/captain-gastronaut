@@ -15,14 +15,19 @@ export default class Particle extends IEntity {
     y: 0,
   };
 
-  async initialize(gameState: IGameState, x: number, y: number, images: HTMLImageElement[]) {
+  async initialize(
+    gameState: IGameState,
+    x: number,
+    y: number,
+    images: HTMLImageElement[],
+  ) {
     this.image = images[~~(Math.random() * (images.length - 1))];
     this.direction = Math.random();
     this.position = {
       x,
       y,
     };
-    this.speed = 2.0;
+    this.speed = 1.0;
     return this;
   }
 
@@ -49,7 +54,11 @@ export default class Particle extends IEntity {
     context.save();
     context.translate(this.position.x, this.position.y);
     context.globalAlpha = this.fade;
-    context.drawImage(this.image, -this.image.width / 2, -this.image.height / 2);
+    context.drawImage(
+      this.image,
+      -this.image.width / 2,
+      -this.image.height / 2,
+    );
     context.globalAlpha = 1;
     context.restore();
   }

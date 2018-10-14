@@ -55,6 +55,9 @@ export default class Obstacle extends IEntity {
         return;
       }
       if (this.bumpSound !== null || this.bumpSound.paused) {
+        if (this.bumpSound) {
+          this.bumpSound.pause();
+        }
         this.bumpSound = this.bumpSounds[
           ~~(Math.random() * this.bumpSounds.length)
         ];
