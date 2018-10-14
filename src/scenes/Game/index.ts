@@ -26,7 +26,7 @@ export default class Game implements IScene {
   background: HTMLImageElement;
   planets: HTMLImageElement[];
   invaders: HTMLImageElement;
-  flingTimer: number = randomValue(50, 10);
+  flingTimer: number = 0;
   flingSound: HTMLAudioElement;
   score: number;
   imageLoader: ImageLoader = new ImageLoader();
