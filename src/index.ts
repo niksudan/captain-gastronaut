@@ -117,6 +117,8 @@ const main = async () => {
     handleCanvasResize();
 
     context.clearRect(0, 0, GameSettings.width, GameSettings.height);
+    context.fillStyle = '#000000';
+    context.fillRect(0, 0, GameSettings.width, GameSettings.height);
 
     if (gameState.focusedEntity !== null) {
       const position = gameState.focusedEntity.physicsBody.position;
