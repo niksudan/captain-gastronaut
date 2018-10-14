@@ -38,10 +38,11 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Large obstacle~~
 * ~~Fart particles~~
 * ~~Shit~~
-* Background
-* Planet under attack
-* Planet exploded
+* ~~Background~~
+* ~~Planet under attack~~
+* ~~Planet exploded~~
 * ~~Player head expressions (charging fart, shitstorm)~~
+* Logo
 
 ### Optional
 
@@ -50,4 +51,3 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Invader arm
 * Invader leg
 * Laser gun
-* Logo
