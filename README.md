@@ -17,6 +17,7 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * Difficulty progression (spawn harder obstacles, more frequent/intense flings)
 * Game over & screen flash
 * Menu
+* Setting box spawn counts (x many smalls, x many meds, etc)
 
 ### Optional
 
