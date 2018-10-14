@@ -47,15 +47,15 @@ export default class Player extends IEntity {
 
   async initializeParticles() {
     fartParticles = await Promise.all([
-      await this.imageLoader.loadImage('/assets/images/fart1.png'),
-      await this.imageLoader.loadImage('/assets/images/fart2.png'),
-      await this.imageLoader.loadImage('/assets/images/fart3.png'),
-      await this.imageLoader.loadImage('/assets/images/fart4.png'),
+      await this.imageLoader.loadImage('./assets/images/fart1.png'),
+      await this.imageLoader.loadImage('./assets/images/fart2.png'),
+      await this.imageLoader.loadImage('./assets/images/fart3.png'),
+      await this.imageLoader.loadImage('./assets/images/fart4.png'),
     ]);
     pooParticles = await Promise.all([
-      await this.imageLoader.loadImage('/assets/images/shit1.png'),
-      await this.imageLoader.loadImage('/assets/images/shit2.png'),
-      await this.imageLoader.loadImage('/assets/images/shit3.png'),
+      await this.imageLoader.loadImage('./assets/images/shit1.png'),
+      await this.imageLoader.loadImage('./assets/images/shit2.png'),
+      await this.imageLoader.loadImage('./assets/images/shit3.png'),
     ]);
   }
 
@@ -63,22 +63,22 @@ export default class Player extends IEntity {
     await this.initializeParticles();
 
     this.image = await this.imageLoader.loadImage(
-      '/assets/images/playerBody.png',
+      './assets/images/playerBody.png',
     );
 
     this.chargeSounds = [
-      await this.soundLoader.loadSound('/assets/sounds/charge1.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/charge2.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/charge3.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/charge1.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/charge2.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/charge3.ogg'),
     ];
     this.fartSounds = [
-      await this.soundLoader.loadSound('/assets/sounds/fart1.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/fart2.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/fart1.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/fart2.ogg'),
     ];
     this.bigFartSounds = [
-      await this.soundLoader.loadSound('/assets/sounds/bigfart1.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bigfart2.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bigfart3.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bigfart1.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bigfart2.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bigfart3.ogg'),
     ];
 
     this.physicsBody = Bodies.rectangle(

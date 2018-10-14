@@ -18,9 +18,9 @@ export default class Obstacle extends IEntity {
 
   async initializeSounds() {
     this.bumpSounds = [
-      await this.soundLoader.loadSound('/assets/sounds/bump1.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bump2.ogg'),
-      await this.soundLoader.loadSound('/assets/sounds/bump3.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump1.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump2.ogg'),
+      await this.soundLoader.loadSound('./assets/sounds/bump3.ogg'),
     ];
   }
 
@@ -29,7 +29,7 @@ export default class Obstacle extends IEntity {
       OBSTACLE_IMAGES[~~(Math.random() * OBSTACLE_IMAGES.length)];
 
     this.image = await this.imageLoader.loadImage(
-      `/assets/images/${imageSelected}`,
+      `./assets/images/${imageSelected}`,
     );
 
     await this.initializeSounds();

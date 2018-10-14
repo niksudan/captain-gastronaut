@@ -18,17 +18,17 @@ export default class PlayerHead extends IEntity {
   async initialize(gameState: IGameState, x: number, y: number) {
     this.faces = {
       PASSIVE: await this.imageLoader.loadImage(
-        '/assets/images/playerHead.png',
+        './assets/images/playerHead.png',
       ),
       CHARGING: await this.imageLoader.loadImage(
-        '/assets/images/playerHead2.png',
+        './assets/images/playerHead2.png',
       ),
-      POOP: await this.imageLoader.loadImage('/assets/images/playerHead3.png'),
+      POOP: await this.imageLoader.loadImage('./assets/images/playerHead3.png'),
       LEFT: await this.imageLoader.loadImage(
-        '/assets/images/playerHeadLeft.png',
+        './assets/images/playerHeadLeft.png',
       ),
       RIGHT: await this.imageLoader.loadImage(
-        '/assets/images/playerHeadRight.png',
+        './assets/images/playerHeadRight.png',
       ),
     };
 
