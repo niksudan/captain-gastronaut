@@ -181,7 +181,6 @@ export default class Player extends IEntity {
     if (gameState.keyPresses['ArrowUp']) {
       this.canFart = true;
       this.head.setFace('CHARGING');
-      this.buildUp += BUILD_UP_SPEED;
 
       // HNNNGGGHH
       if (this.buildUp === 0) {
@@ -189,6 +188,8 @@ export default class Player extends IEntity {
         this.chargeSound.currentTime = 0;
         this.chargeSound.play();
       }
+
+      this.buildUp += BUILD_UP_SPEED;
 
       // wiggle yo ass ;)
       Body.setAngularVelocity(
