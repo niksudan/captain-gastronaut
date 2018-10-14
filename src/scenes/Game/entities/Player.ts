@@ -1,4 +1,11 @@
-import { Bodies, Body, Composite, World, Constraint, IEngineDefinition } from 'matter-js';
+import {
+  Bodies,
+  Body,
+  Composite,
+  World,
+  Constraint,
+  IEngineDefinition,
+} from 'matter-js';
 import * as randomItem from 'random-item';
 
 import PlayerHead from './PlayerLimbs/PlayerHead';
@@ -35,6 +42,7 @@ export default class Player extends IEntity {
   canFart: boolean = false;
   fartSounds: HTMLAudioElement[];
   bigFartSounds: HTMLAudioElement[];
+  isFarting: boolean = false;
 
   async initializeParticles() {
     fartParticles = await Promise.all([
@@ -141,7 +149,12 @@ export default class Player extends IEntity {
     return this;
   }
 
-  async addParticle(gameState: IGameState, x: number, y: number, images: HTMLImageElement[]) {
+  async addParticle(
+    gameState: IGameState,
+    x: number,
+    y: number,
+    images: HTMLImageElement[],
+  ) {
     const particle = await new Particle().initialize(gameState, x, y, images);
     gameState.currentScene.entities.push(particle);
   }
@@ -151,9 +164,10 @@ export default class Player extends IEntity {
   }
 
   update(world: World, gameState: IGameState) {
-    const ROTATION_SPEED = 0.02;
-    const SPEED = 2;
-    const BUILD_UP_SPEED = 0.005;
+    const ROTATION_SPEED = 0.025;
+    const SPEED = 1.5;
+    const BUILD_UP_SPEED = 0.008;
+    const { x, y } = this.physicsBody.position;
 
     if (gameState.keyPresses['ArrowLeft']) {
       Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
@@ -163,52 +177,79 @@ export default class Player extends IEntity {
       Body.setAngularVelocity(this.physicsBody, ROTATION_SPEED);
     }
 
+    // time to fart
     if (gameState.keyPresses['ArrowUp']) {
+      this.canFart = true;
+      this.head.setFace('CHARGING');
+      this.buildUp += BUILD_UP_SPEED;
+
+      // HNNNGGGHH
       if (this.buildUp === 0) {
         this.chargeSound = randomItem(this.chargeSounds);
         this.chargeSound.currentTime = 0;
         this.chargeSound.play();
       }
-      this.canFart = true;
-      this.buildUp += BUILD_UP_SPEED;
+
+      // wiggle yo ass ;)
       Body.setAngularVelocity(
         this.physicsBody,
         Math.sin(this.buildUp * 100) / 100,
       );
-      this.head.setFace('CHARGING');
     } else {
       if (this.chargeSound) {
         this.chargeSound.pause();
       }
+
+      // release the crap-ken
       if (this.buildUp > 0) {
         const angle = this.physicsBody.angle - Math.PI / 2;
-        if (this.buildUp > 0.5) {
-          const force = Math.min(1, this.buildUp);
+        const force = Math.min(1, this.buildUp);
+
+        // wheeeee
+        if (this.buildUp > 0.1) {
           Body.applyForce(this.physicsBody, this.physicsBody.position, {
             x: Math.cos(angle) * (SPEED * force),
             y: Math.sin(angle) * (SPEED * force),
           });
 
-          const { x, y } = this.physicsBody.position;
-
-          for (let i: number = 0; i < 5; i ++) {
+          // puff daddies
+          const fartCount = Math.max(2, Math.round(force * 5));
+          for (let i: number = 0; i < fartCount; i++) {
             this.addParticle(gameState, x, y, fartParticles);
           }
         }
+
         if (this.canFart) {
+          this.canFart = false;
+
+          // gotta play them bottom burps
           if (this.buildUp > 0.5) {
             randomItem(this.bigFartSounds).play();
           } else {
             randomItem(this.fartSounds).play();
           }
-          this.canFart = false;
+
+          // trigger the fart trail
+          this.isFarting = true;
+          const fartTimeout = Math.max(200, Math.round(force * 500));
+          window.setTimeout(() => {
+            this.isFarting = false;
+          }, fartTimeout);
         }
+
         this.buildUp = 0;
       }
+
+      // be expressive
       if (this.physicsBody.speed > 2) {
         this.head.setFace('POOP');
       } else {
         this.head.setFace('PASSIVE');
+      }
+
+      // fart trail
+      if (this.isFarting && Math.random() > 0.3) {
+        this.addParticle(gameState, x, y, fartParticles);
       }
     }
   }
