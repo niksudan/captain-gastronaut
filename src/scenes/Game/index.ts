@@ -22,9 +22,13 @@ export default class Game implements IScene {
   particlesToAdd: IEntity[];
   panels: Panel[];
   background: HTMLImageElement;
+  planets: HTMLImageElement[];
+  invaders: HTMLImageElement;
   flingTimer: number = randomValue(50, 10);
   flingSound: HTMLAudioElement;
   score: number;
+  imageLoader: ImageLoader = new ImageLoader();
+  invaderBob: number = 0;
 
   constructor() {
     this.entities = [];
@@ -119,16 +123,26 @@ export default class Game implements IScene {
     await this.createWalls(gameState);
     await this.createPanels();
     await this.createObstacles(gameState);
-    this.background = await new ImageLoader().loadImage(
+
+    this.background = await this.imageLoader.loadImage(
       './assets/images/background.png',
     );
+    this.invaders = await this.imageLoader.loadImage(
+      './assets/images/invaders.png',
+    );
+    this.planets = [
+      await this.imageLoader.loadImage('./assets/images/planet.png'),
+      await this.imageLoader.loadImage('./assets/images/planetDead.png'),
+    ];
+
     this.flingSound = await new SoundLoader().loadSound(
       './assets/sounds/fling.ogg',
     );
-    const player = await new Player().initialize(gameState, 0, 0);
 
+    const player = await new Player().initialize(gameState, 0, 0);
     gameState.focusedEntity = player;
     await Promise.all([this.entities.push(player)]);
+
     return true;
   }
 
@@ -175,9 +189,19 @@ export default class Game implements IScene {
     for (let panel of this.panels) {
       panel.update(gameState);
     }
+
+    // invader bob's a nice guy
+    // this variable has nothing to do with him
+    this.invaderBob += 1;
   }
 
   render(context: CanvasRenderingContext2D) {
+    context.drawImage(this.planets[0], -150, -150);
+    context.drawImage(
+      this.invaders,
+      -250,
+      -125 + Math.sin(this.invaderBob / 40) * 10,
+    );
     context.drawImage(
       this.background,
       -(GameSettings.worldWidth / 2) - 128,
