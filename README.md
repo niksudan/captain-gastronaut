@@ -9,12 +9,12 @@ Control an Astronaut on a Space Station trying to protect their home planet from
 * ~~Turning the player~~
 * ~~Applying fart force~~
 * ~~Viewport panning~~
-* Obstacle spawning
-* Control panel interaction
-* Choosing control panels to activate
+* ~~Obstacle spawning~~
+* ~~Control panel interaction~~
+* ~~Choosing control panels to activate~~
+* ~~Random flinging~~
 * Timer
-* Difficulty progression (spawn harder obstacles)
-* Random flinging
+* Difficulty progression (spawn harder obstacles, more frequent/intense flings)
 * Game over & screen flash
 * Menu
 
