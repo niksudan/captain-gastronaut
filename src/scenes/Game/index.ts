@@ -7,11 +7,15 @@ import Player from './entities/Player';
 import Obstacle from './entities/Obstacle';
 import Walls from './entities/Walls';
 import GameSettings from '../../data/GameSettings';
-import { World } from 'matter-js';
+import { World, Body } from 'matter-js';
 import ImageLoader from '../../loaders/ImageLoader';
 import Panel from './entities/Panel';
 
 const MAX_OBSTACLE_COUNT = 10;
+
+const randomValue = (max: number, min: number) => {
+  return (Math.random() * (max - min)) + min;
+};
 
 export default class Game implements IScene {
   entities: IEntity[];
@@ -20,6 +24,7 @@ export default class Game implements IScene {
   obstacles: IEntity[] = [];
   panels: Panel[];
   background: HTMLImageElement;
+  flingTimer: number = randomValue(50, 10);
 
   constructor() {
     this.entities = [];
@@ -97,6 +102,8 @@ export default class Game implements IScene {
   }
 
   update(world: World, gameState: IGameState) {
+    const FLING_FORCE = 0.5;
+
     if (this.particlesToAdd.length) {
       this.entities = [...this.particlesToAdd, ...this.entities];
       this.particlesToAdd = [];
@@ -108,9 +115,28 @@ export default class Game implements IScene {
       }
     }
     this.entitiesToDestroy = [];
+    this.flingTimer -= 0.1;
+    const fling = {
+      x: 0,
+      y: 0,
+    };
+
+    // Add some fling if time runs out
+    if (this.flingTimer < 0) {
+      const FLING_DIRECTION = Math.random() * 360;
+      this.flingTimer = randomValue(50, 20);
+      fling.x = Math.cos(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
+      fling.y = Math.sin(FLING_DIRECTION * (Math.PI / 180)) * FLING_FORCE;
+    }
+
     for (let entity of this.entities) {
       entity.update(world, gameState);
+
+      if (entity.physicsBody && fling.x !== 0 && fling.y !== 0) {
+        Body.applyForce(entity.physicsBody, entity.physicsBody.position, fling);
+      }
     }
+
     for (let panel of this.panels) {
       panel.update(gameState);
     }
