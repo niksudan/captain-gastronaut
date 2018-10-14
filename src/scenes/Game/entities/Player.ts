@@ -29,6 +29,7 @@ interface ISoundData {
 }
 
 let fartParticles = [];
+let pooParticles = [];
 
 export default class Player extends IEntity {
   physicsBody: Body;
@@ -50,6 +51,11 @@ export default class Player extends IEntity {
       await this.imageLoader.loadImage('/assets/images/fart2.png'),
       await this.imageLoader.loadImage('/assets/images/fart3.png'),
       await this.imageLoader.loadImage('/assets/images/fart4.png'),
+    ]);
+    pooParticles = await Promise.all([
+      await this.imageLoader.loadImage('/assets/images/shit1.png'),
+      await this.imageLoader.loadImage('/assets/images/shit2.png'),
+      await this.imageLoader.loadImage('/assets/images/shit3.png'),
     ]);
   }
 
@@ -169,14 +175,6 @@ export default class Player extends IEntity {
     const BUILD_UP_SPEED = 0.008;
     const { x, y } = this.physicsBody.position;
 
-    if (gameState.keyPresses['ArrowLeft']) {
-      Body.setAngularVelocity(this.physicsBody, -ROTATION_SPEED);
-    }
-
-    if (gameState.keyPresses['ArrowRight']) {
-      Body.setAngularVelocity(this.physicsBody, ROTATION_SPEED);
-    }
-
     // time to fart
     if (gameState.keyPresses['ArrowUp']) {
       this.canFart = true;
@@ -214,9 +212,14 @@ export default class Player extends IEntity {
           });
 
           // puff daddies
-          const fartCount = Math.max(2, Math.round(force * 5));
+          const fartCount = Math.max(4, Math.round(force * 10));
           for (let i: number = 0; i < fartCount; i++) {
             this.addParticle(gameState, x, y, fartParticles);
+          }
+          if (force > 0.8 && Math.random() > 0.5) {
+            for (let i: number = 0; i < randomItem([2, 2, 3]); i++) {
+              this.addParticle(gameState, x, y, pooParticles);
+            }
           }
         }
 
@@ -251,6 +254,26 @@ export default class Player extends IEntity {
       // fart trail
       if (this.isFarting && Math.random() > 0.3) {
         this.addParticle(gameState, x, y, fartParticles);
+      }
+    }
+
+    const rotSpeed = Math.max(0, ROTATION_SPEED - this.buildUp / 20);
+
+    if (gameState.keyPresses['ArrowLeft']) {
+      if (rotSpeed > 0) {
+        Body.setAngularVelocity(this.physicsBody, -rotSpeed);
+      }
+      if (!this.isFarting && this.buildUp === 0) {
+        this.head.setFace('LEFT');
+      }
+    }
+
+    if (gameState.keyPresses['ArrowRight']) {
+      if (rotSpeed > 0) {
+        Body.setAngularVelocity(this.physicsBody, rotSpeed);
+      }
+      if (!this.isFarting && this.buildUp === 0) {
+        this.head.setFace('RIGHT');
       }
     }
   }
