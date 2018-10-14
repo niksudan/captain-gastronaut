@@ -2,7 +2,11 @@ import IEntity from '../../../definitions/IEntity';
 import { World, Body, Bodies, Sleeping } from 'matter-js';
 import { IGameState } from '../../../definitions/IGameState';
 
-const OBSTACLE_IMAGES = ['obstacleBig.png', 'obstacleMedium.png', 'obstacleSmall.png'];
+const OBSTACLE_IMAGES = [
+  'obstacleBig.png',
+  'obstacleMedium.png',
+  'obstacleSmall.png',
+];
 
 export default class Obstacle extends IEntity {
   physicsBody: Body;
@@ -22,7 +26,7 @@ export default class Obstacle extends IEntity {
 
   async initialize(gameState: IGameState, x: number, y: number) {
     const imageSelected =
-      OBSTACLE_IMAGES[~~(Math.random() * (OBSTACLE_IMAGES.length))];
+      OBSTACLE_IMAGES[~~(Math.random() * OBSTACLE_IMAGES.length)];
 
     this.image = await this.imageLoader.loadImage(
       `/assets/images/${imageSelected}`,
@@ -44,14 +48,18 @@ export default class Obstacle extends IEntity {
       },
     );
 
-    Body.rotate(this.physicsBody, (Math.random() * 360) * (180 / Math.PI));
+    Body.rotate(this.physicsBody, Math.random() * 360 * (180 / Math.PI));
 
     gameState.subscribeToEvent('obstacle', (gameState: IGameState) => {
       if (!gameState.withinViewPort(this)) {
         return;
       }
       if (this.bumpSound !== null || this.bumpSound.paused) {
-        this.bumpSound = this.bumpSounds[~~(Math.random() * this.bumpSounds.length)];
+        this.bumpSound = this.bumpSounds[
+          ~~(Math.random() * this.bumpSounds.length)
+        ];
+        this.bumpSound.currentTime = 0;
+        this.bumpSound.volume = 0.6;
         this.bumpSound.play();
       }
     });
