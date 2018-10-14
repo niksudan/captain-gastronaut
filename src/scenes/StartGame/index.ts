@@ -7,8 +7,8 @@ import { IScene } from "../../definitions/IScene";
 import Player from "../Game/entities/Player";
 import GameSettings from "../../data/GameSettings";
 import MenuWalls from "./entities/MenuWalls";
-import Game from "../Game";
 import Button from "./entities/Button";
+import IntroScreen from "../IntroScreen";
 
 export default class StartGame implements IScene {
   entities: IEntity[] = [];
@@ -53,7 +53,7 @@ export default class StartGame implements IScene {
     }
     this.pulse += 0.05;
     if (this.startGame) {
-      await gameState.setScene(new Game());
+      await gameState.setScene(new IntroScreen());
     }
   }
 
