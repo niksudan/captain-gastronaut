@@ -216,7 +216,9 @@ export default class Player extends IEntity {
           for (let i: number = 0; i < fartCount; i++) {
             this.addParticle(gameState, x, y, fartParticles);
           }
-          if (force > 0.8 && Math.random() > 0.5) {
+
+          // oh SHIT
+          if (force > 0.8 && Math.random() > 0.75) {
             for (let i: number = 0; i < randomItem([2, 2, 3]); i++) {
               this.addParticle(gameState, x, y, pooParticles);
             }
