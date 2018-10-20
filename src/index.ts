@@ -184,14 +184,14 @@ const main = async () => {
 
   const testButton = (button, touch: Touch) => {
     return Math.abs(
-      button.coordinate.x - getRelativeCoordinate(touch.clientX, document.body.clientWidth, GameSettings.width)
+      button.coordinate.x - getRelativeCoordinate(touch.clientX - canvas.offsetLeft, canvas.clientWidth, GameSettings.width)
     ) + Math.abs(
-      button.coordinate.y - getRelativeCoordinate(touch.clientY, document.body.clientHeight, GameSettings.height)
-    ) < button.image.width * 2;
+      button.coordinate.y - getRelativeCoordinate(touch.clientY - canvas.offsetTop, canvas.clientHeight, GameSettings.height)
+    ) < button.image.width;
   }
 
   if (IS_MOBILE) {
-    document.addEventListener('touchstart', (event) => {
+    canvas.addEventListener('touchstart', (event) => {
       const checkForButton = (keyName: string, property) => {
         let isPressed = false;
     
@@ -211,7 +211,7 @@ const main = async () => {
       checkForButton('ArrowUp', 'up');
     });
 
-    document.addEventListener('touchend', (event) => {
+    canvas.addEventListener('touchend', (event) => {
       const checkForButton = (keyName: string, property) => {
         let isPressed = false;
     
@@ -311,9 +311,6 @@ const main = async () => {
 
   };
 
-  if (IS_MOBILE) {
-    (screen as any).orientation.lock('landscape');
-  }
   render();
 };
 
