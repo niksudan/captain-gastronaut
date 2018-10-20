@@ -1,9 +1,9 @@
 import { Engine, Events, World } from 'matter-js';
+import * as Mobile from 'is-mobile';
 import GameSettings from './data/GameSettings';
 import { IScene } from './definitions/IScene';
 import { IGameState } from './definitions/IGameState';
 
-import Game from './scenes/Game';
 import IEntity from './definitions/IEntity';
 import SoundLoader from './loaders/SoundLoader';
 import StartGame from './scenes/StartGame';
@@ -73,6 +73,8 @@ document.body.appendChild(canvas);
 let engine = Engine.create();
 
 World.add(engine.world, []);
+
+const IS_MOBILE = Mobile.isMobile();
 
 const gameState = {
   currentScene: null,
@@ -151,6 +153,85 @@ const main = async () => {
   await Promise.all(PRELOAD_IMAGES.map(async (image) => await imageLoader.loadImage(`./assets/images/${image}.png`)));
   await Promise.all(PRELOAD_AUDIO.map(async (audio) => await soundLoader.loadSound(`./assets/sounds/${audio}.ogg`)));
 
+
+  const MOBILE_BUTTONS = {
+    left: {
+      image: await imageLoader.loadImage('./assets/images/playerHeadLeft.png'),
+      coordinate: {
+        x: 50,
+        y: GameSettings.height - 100,
+      }
+    },
+    right: {
+      image: await imageLoader.loadImage('./assets/images/playerHeadRight.png'),
+      coordinate: {
+        x: 150,
+        y: GameSettings.height - 100,
+      }
+    },
+    up: {
+      image: await imageLoader.loadImage('./assets/images/playerHead2.png'),
+      coordinate: {
+        x: GameSettings.width - 50,
+        y: GameSettings.height - 100,
+      }
+    },
+  };
+
+  const getRelativeCoordinate = (c, sc, gc) => {
+    return (c / sc) * gc;
+  }
+
+  const testButton = (button, touch: Touch) => {
+    return Math.abs(
+      button.coordinate.x - getRelativeCoordinate(touch.clientX, document.body.clientWidth, GameSettings.width)
+    ) + Math.abs(
+      button.coordinate.y - getRelativeCoordinate(touch.clientY, document.body.clientHeight, GameSettings.height)
+    ) < button.image.width * 2;
+  }
+
+  if (IS_MOBILE) {
+    document.addEventListener('touchstart', (event) => {
+      const checkForButton = (keyName: string, property) => {
+        let isPressed = false;
+    
+        for (let i = 0; i < event.touches.length; i++) {
+          let touch = event.touches.item(i);
+          
+          isPressed = isPressed || testButton(MOBILE_BUTTONS[property], touch);
+        }
+
+        if (isPressed) {
+          gameState.keyPresses[keyName] = true;
+        }
+      };
+
+      checkForButton('ArrowLeft', 'left');
+      checkForButton('ArrowRight', 'right');
+      checkForButton('ArrowUp', 'up');
+    });
+
+    document.addEventListener('touchend', (event) => {
+      const checkForButton = (keyName: string, property) => {
+        let isPressed = false;
+    
+        for (let i = 0; i < event.touches.length; i++) {
+          let touch = event.touches.item(i);
+          
+          isPressed = isPressed || testButton(MOBILE_BUTTONS[property], touch);
+        }
+    
+        if (!isPressed) {
+          gameState.keyPresses[keyName] = false;
+        }
+      };
+
+      checkForButton('ArrowLeft', 'left');
+      checkForButton('ArrowRight', 'right');
+      checkForButton('ArrowUp', 'up');
+    });
+  }
+
   gameState.music = await soundLoader.loadSound(
     './assets/sounds/music.ogg',
   );
@@ -173,6 +254,22 @@ const main = async () => {
     canvas.style.width = `${canvasWidth}px`;
     canvas.style.height = `${canvasHeight}px`;
   };
+
+  const renderMobileButtons = () => {
+    context.globalAlpha = 0.5;
+    const renderButton = (button) => {
+      context.drawImage(
+        button.image,
+        button.coordinate.x - button.image.width / 2,
+        button.coordinate.y - button.image.height / 2
+      );
+    }
+
+    renderButton(MOBILE_BUTTONS.left);
+    renderButton(MOBILE_BUTTONS.right);
+    renderButton(MOBILE_BUTTONS.up);
+    context.globalAlpha = 1.0;
+  }
 
   const render = async () => {
     context.save();
@@ -203,12 +300,20 @@ const main = async () => {
     await gameState.currentScene.update(engine.world, gameState);
     gameState.currentScene.render(context);
 
+    context.restore();
     Engine.update(engine);
+
+    if (IS_MOBILE) {
+      renderMobileButtons();
+    }
+
     requestAnimationFrame(render);
 
-    context.restore();
   };
 
+  if (IS_MOBILE) {
+    (screen as any).orientation.lock('landscape');
+  }
   render();
 };
 
